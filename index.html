@@ -6,83 +6,169 @@
     <title>صيدلية د. هاني فاروق</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
+        .pharmacy-gradient { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .swiper-slide { width: 85%; }
+        .promo-card { height: 150px; border-radius: 20px; position: relative; overflow: hidden; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="pb-24">
 
-    <header class="bg-blue-600 text-white p-4 shadow-lg sticky top-0 z-50">
+    <header class="pharmacy-gradient text-white p-4 sticky top-0 z-50 shadow-md rounded-b-3xl">
         <div class="flex justify-between items-center">
-            <h1 class="text-xl font-bold">صيدلية د. هاني فاروق</h1>
-            <i class="fas fa-prescription-bottle-alt text-2xl"></i>
+            <div class="flex items-center gap-2">
+                <div class="bg-white/20 p-2 rounded-lg">
+                    <i class="fas fa-hand-holding-medical text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">صيدلية د. هاني</h1>
+                    <p class="text-[10px] opacity-80">نعتني بصحتك على مدار الساعة</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
         </div>
     </header>
 
-    <div class="m-4 bg-blue-100 p-6 rounded-2xl text-center border-2 border-blue-200">
-        <h2 class="text-blue-800 font-bold text-lg">أهلاً بك في صيدليتك الرقمية</h2>
-        <p class="text-blue-600 text-sm">أرسل الروشتة وسنقوم بتوصيل الدواء فوراً</p>
-        <button class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full font-bold shadow-md">اطلب الآن</button>
+    <div class="mt-6 mb-2">
+        <h3 class="px-4 mb-3 text-gray-800 font-bold flex items-center gap-2">
+            <i class="fas fa-bolt text-yellow-500"></i> عروض الصيدلية
+        </h3>
+        <div class="swiper mySwiper px-4">
+            <div class="swiper-wrapper" id="offers-list">
+                <div class="swiper-slide">
+                    <div class="promo-card bg-blue-600 p-5 flex flex-col justify-center text-white">
+                        <h4 class="text-xl font-bold">خصم 15%</h4>
+                        <p class="text-sm opacity-90">على جميع منتجات العناية بالبشرة</p>
+                        <button class="mt-3 bg-white text-blue-600 text-xs font-bold px-4 py-2 rounded-lg w-fit shadow-lg">تسوق الآن</button>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="promo-card bg-emerald-500 p-5 flex flex-col justify-center text-white">
+                        <h4 class="text-xl font-bold">توصيل مجاني</h4>
+                        <p class="text-sm opacity-90">لجميع الطلبات فوق 300 جنيه</p>
+                        <button class="mt-3 bg-white text-emerald-600 text-xs font-bold px-4 py-2 rounded-lg w-fit shadow-lg">اطلب الآن</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="p-4 grid grid-cols-2 gap-4" id="categories">
-            <div class="p-4 flex justify-between items-center">
-        <h3 class="font-bold text-lg">الأصناف المتوفرة</h3>
-    </div>
-    <div class="p-4 grid grid-cols-2 gap-4" id="products-list">
-        <p class="text-center col-span-2 text-gray-400">جاري تحميل الأدوية...</p>
-    </div>
+    <div class="mx-4 my-6 bg-white p-4 rounded-2xl shadow-sm border border-blue-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center text-blue-600">
+                <i class="fas fa-camera text-xl"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-sm">عندك روشتة؟</h4>
+                <p class="text-xs text-gray-500">صورها وابعتها وهتوصلك فوراً</p>
+            </div>
+        </div>
+        <button onclick="alert('جاري تجهيز كاميرا الروشتة...')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md">تصوير</button>
     </div>
 
-    <a href="#" id="whatsappBtn" class="fixed bottom-6 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-50">
+    <div class="flex gap-3 px-4 overflow-x-auto pb-4 no-scrollbar">
+        <button class="pharmacy-gradient text-white px-6 py-2 rounded-full font-bold whitespace-nowrap shadow-md">الكل</button>
+        <button class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap">أدوية</button>
+        <button class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap">تجميل</button>
+        <button class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap">أطفال</button>
+    </div>
+
+    <div class="px-4 grid grid-cols-2 gap-4" id="products-list">
+        <p class="text-center col-span-2 text-gray-400 py-10">جاري تحميل المنتجات...</p>
+    </div>
+
+    <a href="#" id="whatsappBtn" class="fixed bottom-24 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-50 border-4 border-white">
         <i class="fab fa-whatsapp"></i>
     </a>
 
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 flex justify-around items-center z-50 rounded-t-3xl shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+        <div class="flex flex-col items-center text-blue-600">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">الرئيسية</span>
+        </div>
+        <div class="flex flex-col items-center text-gray-400">
+            <i class="fas fa-th-large text-xl"></i>
+            <span class="text-[10px] mt-1">الأقسام</span>
+        </div>
+        <div class="flex flex-col items-center text-gray-400 relative">
+            <div class="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center text-white absolute -top-10 shadow-lg border-4 border-white">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <span class="text-[10px] mt-5">السلة</span>
+        </div>
+        <div class="flex flex-col items-center text-gray-400">
+            <i class="fas fa-receipt text-xl"></i>
+            <span class="text-[10px] mt-1">طلباتي</span>
+        </div>
+        <div class="flex flex-col items-center text-gray-400">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-[10px] mt-1">حسابي</span>
+        </div>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-    // الحصول على الرابط من البيئة أو وضعه مباشرة للتجربة السريعة
-    const API_URL = "https://script.google.com/macros/s/AKfycbw6I4sitywB6Y3-_s8PFG_wolbbd_ysLw8WUdwmuLS26XmyyhUqWOrjKUoOCiJV1hx7/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbw6I4sitywB6Y3-_s8PFG_wolbbd_ysLw8WUdwmuLS26XmyyhUqWOrjKUoOCiJV1hx7/exec";
+
+        // Initialize Swiper
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: "auto",
+            spaceBetween: 15,
+            centeredSlides: false,
+        });
 
         async function loadAppData() {
-        try {
-            // 1. جلب إعدادات الواتساب من شيت Admin
-            const adminRes = await fetch(`${API_URL}?sheet=Admin`);
-            const adminData = await adminRes.json();
-            const whatsapp = adminData.find(row => row.SettingName === 'WhatsAppNumber')?.Value;
-            if (whatsapp) document.getElementById('whatsappBtn').href = `https://wa.me/${whatsapp}`;
+            try {
+                // 1. WhatsApp Config
+                const adminRes = await fetch(`${API_URL}?sheet=Admin`);
+                const adminData = await adminRes.json();
+                const whatsapp = adminData.find(row => row.SettingName === 'WhatsAppNumber')?.Value;
+                if (whatsapp) document.getElementById('whatsappBtn').href = `https://wa.me/${whatsapp}`;
 
-            // 2. جلب المنتجات من شيت Products
-            const productRes = await fetch(`${API_URL}?sheet=Products`);
-            const products = await productRes.json();
-            
-            const productsContainer = document.getElementById('products-list');
-            productsContainer.innerHTML = ''; // مسح محتوى التحميل
+                // 2. Load Products
+                const productRes = await fetch(`${API_URL}?sheet=Products`);
+                const products = await productRes.json();
+                
+                const productsContainer = document.getElementById('products-list');
+                productsContainer.innerHTML = ''; 
 
-            if (products.length === 0) {
-                productsContainer.innerHTML = '<p class="text-center col-span-2 text-gray-400">لا توجد أدوية متوفرة حالياً</p>';
-                return;
+                if (products.length === 0) {
+                    productsContainer.innerHTML = '<p class="text-center col-span-2 text-gray-400">لا توجد أدوية متوفرة حالياً</p>';
+                    return;
+                }
+
+                products.forEach(item => {
+                    productsContainer.innerHTML += `
+                        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center relative overflow-hidden">
+                            <div class="absolute top-2 right-2 bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded-md font-bold">
+                                متوفر
+                            </div>
+                            <img src="${item.Image || 'https://via.placeholder.com/150?text=Pharmacy'}" class="w-full h-28 object-contain mb-3 mt-4">
+                            <h3 class="font-bold text-sm text-gray-800 text-right w-full truncate">${item.Name}</h3>
+                            <div class="flex justify-between items-center w-full mt-3">
+                                <p class="text-blue-600 font-bold text-sm">${item.Price} ج.م</p>
+                                <button onclick="alert('تمت الإضافة للسلة')" class="bg-gray-100 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-transform">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+            } catch (error) {
+                console.error("Error:", error);
             }
-
-            products.forEach(item => {
-                productsContainer.innerHTML += `
-                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
-                        <img src="${item.Image || 'https://via.placeholder.com/100?text=Medicine'}" class="w-20 h-20 object-contain mb-2">
-                        <h3 class="font-bold text-sm text-center">${item.Name}</h3>
-                        <p class="text-blue-600 font-bold mt-1">${item.Price} ج.م</p>
-                        <button onclick="addToCart('${item.Name}', ${item.Price})" class="mt-2 bg-blue-50 text-blue-600 px-4 py-1 rounded-lg text-xs font-bold w-full border border-blue-100">أضف</button>
-                    </div>
-                `;
-            });
-
-        } catch (error) {
-            console.error("Error:", error);
         }
-    }
 
-    // تشغيل الدالة عند تحميل الصفحة
-    window.onload = loadAppData;
-
-    // دالة بسيطة للتنبيه عند الضغط على "اطلب الآن"
-    document.querySelector('button').onclick = () => {
-        alert("سيتم فتح نموذج طلب الروشتة في الخطوة القادمة!");
-    };
-</script>
-
+        window.onload = loadAppData;
+    </script>
 </body>
 </html>
