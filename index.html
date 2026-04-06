@@ -24,7 +24,7 @@
             <div class="flex items-center gap-2">
                 <div class="bg-white/20 p-2 rounded-lg"><i class="fas fa-hand-holding-medical text-xl"></i></div>
                 <div>
-                    <h1 class="text-lg font-bold leading-tight">صيدلية د. هاني</h1>
+                    <h1 class="text-lg font-bold leading-tight">صيدلية د. هاني فاروق</h1>
                     <p class="text-[10px] opacity-80 font-normal">خدمة دوائية متميزة</p>
                 </div>
             </div>
@@ -54,6 +54,7 @@
         <button onclick="filterProducts('أدوية', this)" class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap text-sm">أدوية</button>
         <button onclick="filterProducts('تجميل', this)" class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap text-sm">تجميل</button>
         <button onclick="filterProducts('أطفال', this)" class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap text-sm">أطفال</button>
+        <button onclick="filterProducts('أجهزة طبية', this)" class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap text-sm">أطفال</button>
     </div>
 
     <div class="px-4 grid grid-cols-2 gap-4" id="products-list">
@@ -211,7 +212,7 @@
                 });
 
                 // تجهيز رسالة الواتساب
-                let waMsg = `*طلب جديد - صيدلية د. هاني*\n`;
+ let waMsg = `*طلب جديد -  صيدلية د. هاني فاروق*\n`;
                 waMsg += `*رقم الفاتورة:* #${orderID}\n`;
                 waMsg += `--------------------------\n`;
                 waMsg += `*العميل:* ${name}\n`;
