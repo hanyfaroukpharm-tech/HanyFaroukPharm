@@ -38,9 +38,38 @@
     </a>
 
     <script>
-        // سنضيف هنا لاحقاً كود جلب البيانات من Google Sheets
-        const SHEET_URL = "YOUR_API_URL_HERE"; 
-        console.log("App Ready");
-    </script>
+    // الحصول على الرابط من البيئة أو وضعه مباشرة للتجربة السريعة
+    const API_URL = "https://script.google.com/macros/s/AKfycbw6I4sitywB6Y3-_s8PFG_wolbbd_ysLw8WUdwmuLS26XmyyhUqWOrjKUoOCiJV1hx7/exec";
+
+    async function loadAppData() {
+        try {
+            // 1. جلب إعدادات الصيدلية (رابط الواتساب)
+            const adminRes = await fetch(`${API_URL}?sheet=Admin`);
+            const adminData = await adminRes.json();
+            const whatsapp = adminData.find(row => row.SettingName === 'WhatsAppNumber')?.Value;
+            
+            if (whatsapp) {
+                document.getElementById('whatsappBtn').href = `https://wa.me/${whatsapp}`;
+            }
+
+            // 2. جلب المنتجات (اختياري الآن للتأكد من الربط)
+            const productRes = await fetch(`${API_URL}?sheet=Products`);
+            const products = await productRes.json();
+            console.log("Products Loaded:", products);
+
+        } catch (error) {
+            console.error("Error loading data:", error);
+        }
+    }
+
+    // تشغيل الدالة عند تحميل الصفحة
+    window.onload = loadAppData;
+
+    // دالة بسيطة للتنبيه عند الضغط على "اطلب الآن"
+    document.querySelector('button').onclick = () => {
+        alert("سيتم فتح نموذج طلب الروشتة في الخطوة القادمة!");
+    };
+</script>
+
 </body>
 </html>
