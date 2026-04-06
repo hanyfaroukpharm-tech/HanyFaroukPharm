@@ -12,10 +12,9 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
         .pharmacy-gradient { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .swiper-slide { width: 85%; }
-        .promo-card { height: 150px; border-radius: 20px; position: relative; overflow: hidden; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; }
         .modal.active { display: flex; }
+        .active-tab { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important; color: white !important; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
     </style>
 </head>
 <body class="pb-24">
@@ -26,66 +25,69 @@
                 <div class="bg-white/20 p-2 rounded-lg"><i class="fas fa-hand-holding-medical text-xl"></i></div>
                 <div>
                     <h1 class="text-lg font-bold leading-tight">صيدلية د. هاني</h1>
-                    <p class="text-[10px] opacity-80">نعتني بصحتك على مدار الساعة</p>
+                    <p class="text-[10px] opacity-80 font-normal">خدمة دوائية متميزة</p>
                 </div>
             </div>
             <button class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center"><i class="fas fa-search"></i></button>
         </div>
     </header>
 
-    <div class="mt-6 mb-2">
-        <h3 class="px-4 mb-3 text-gray-800 font-bold flex items-center gap-2"><i class="fas fa-bolt text-yellow-500"></i> عروض الصيدلية</h3>
+    <div class="mt-4">
         <div class="swiper mySwiper px-4">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="promo-card bg-blue-600 p-5 flex flex-col justify-center text-white">
-                        <h4 class="text-xl font-bold">خصم 15%</h4>
-                        <p class="text-sm opacity-90">على منتجات العناية بالبشرة</p>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="promo-card bg-emerald-500 p-5 flex flex-col justify-center text-white">
-                        <h4 class="text-xl font-bold">توصيل مجاني</h4>
-                        <p class="text-sm opacity-90">للطلبات فوق 300 جنيه</p>
-                    </div>
-                </div>
+                <div class="swiper-slide"><div class="promo-card bg-blue-600 p-5 rounded-2xl h-32 flex flex-col justify-center text-white shadow-lg"><h4 class="text-lg font-bold">خصم 15%</h4><p class="text-xs opacity-90">على منتجات العناية بالبشرة</p></div></div>
+                <div class="swiper-slide"><div class="promo-card bg-emerald-500 p-5 rounded-2xl h-32 flex flex-col justify-center text-white shadow-lg"><h4 class="text-lg font-bold">توصيل مجاني</h4><p class="text-xs opacity-90">للطلبات فوق 300 جنيه</p></div></div>
             </div>
         </div>
     </div>
 
-    <div class="mx-4 my-6 bg-white p-4 rounded-2xl shadow-sm border border-blue-100 flex items-center justify-between">
+    <div class="mx-4 my-4 bg-white p-4 rounded-2xl shadow-sm border border-blue-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center text-blue-600"><i class="fas fa-camera text-xl"></i></div>
-            <div><h4 class="font-bold text-sm">عندك روشتة؟</h4><p class="text-xs text-gray-500">صورها وابعتها وهتوصلك فوراً</p></div>
+            <div class="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center text-blue-600"><i class="fas fa-camera"></i></div>
+            <div><h4 class="font-bold text-sm">ارسل روشتة</h4><p class="text-[10px] text-gray-500 font-normal">صور الروشتة وهنوصلك فوراً</p></div>
         </div>
-        <button onclick="openCheckout('prescription')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md">تصوير</button>
+        <button onclick="openCheckout()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md">طلب سريع</button>
+    </div>
+
+    <div id="tabs-container" class="flex gap-2 px-4 overflow-x-auto pb-4 no-scrollbar">
+        <button onclick="filterProducts('الكل', this)" class="active-tab bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap text-sm">الكل</button>
+        <button onclick="filterProducts('أدوية', this)" class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap text-sm">أدوية</button>
+        <button onclick="filterProducts('تجميل', this)" class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap text-sm">تجميل</button>
+        <button onclick="filterProducts('أطفال', this)" class="bg-white text-gray-500 border border-gray-100 px-6 py-2 rounded-full font-bold whitespace-nowrap text-sm">أطفال</button>
     </div>
 
     <div class="px-4 grid grid-cols-2 gap-4" id="products-list">
         <p class="text-center col-span-2 text-gray-400 py-10">جاري تحميل المنتجات...</p>
     </div>
 
-    <a href="#" id="whatsappBtn" class="fixed bottom-24 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-50 border-4 border-white">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+    <a href="#" id="whatsappBtn" class="fixed bottom-24 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-50 border-4 border-white"><i class="fab fa-whatsapp"></i></a>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 flex justify-around items-center z-50 rounded-t-3xl shadow-lg">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 flex justify-around items-center z-50 rounded-t-3xl shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
         <div class="flex flex-col items-center text-blue-600"><i class="fas fa-home text-xl"></i><span class="text-[10px] mt-1 font-bold">الرئيسية</span></div>
-        <div class="flex flex-col items-center text-gray-400" onclick="openCheckout()"><div class="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center text-white absolute -top-10 shadow-lg border-4 border-white relative"><i class="fas fa-shopping-cart"></i><span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span></div><span class="text-[10px] mt-1">السلة</span></div>
+        <div class="flex flex-col items-center text-gray-400 relative" onclick="openCheckout()">
+            <div class="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center text-white absolute -top-10 shadow-lg border-4 border-white">
+                <i class="fas fa-shopping-cart text-sm"></i>
+                <div id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] min-w-[20px] h-5 rounded-full flex items-center justify-center border-2 border-white px-1 font-bold">0</div>
+            </div>
+            <span id="cart-total-nav" class="text-[10px] mt-5 font-bold text-blue-600">0 ج.م</span>
+        </div>
         <div class="flex flex-col items-center text-gray-400"><i class="fas fa-user text-xl"></i><span class="text-[10px] mt-1">حسابي</span></div>
     </nav>
 
     <div id="checkoutModal" class="modal">
-        <div class="bg-white w-full rounded-t-3xl p-6 shadow-2xl">
-            <h3 class="text-lg font-bold mb-4 border-b pb-2">إتمام الطلب</h3>
-            <div id="cart-items-preview" class="mb-4 max-h-32 overflow-y-auto text-sm text-gray-600"></div>
-            <div class="space-y-4">
-                <input type="text" id="cust-name" placeholder="الاسم بالكامل" class="w-full bg-gray-50 border p-3 rounded-xl focus:outline-blue-500">
-                <input type="tel" id="cust-phone" placeholder="رقم الموبايل" class="w-full bg-gray-50 border p-3 rounded-xl focus:outline-blue-500">
-                <textarea id="cust-address" placeholder="العنوان بالتفصيل (أو اللوكيشن)" class="w-full bg-gray-50 border p-3 rounded-xl focus:outline-blue-500"></textarea>
-                <div class="flex justify-between items-center font-bold text-lg text-blue-600"><span>الإجمالي:</span><span id="cart-total-display">0 ج.م</span></div>
-                <button onclick="submitOrder()" class="w-full pharmacy-gradient text-white py-4 rounded-2xl font-bold shadow-lg">تأكيد وإرسال للواتساب</button>
-                <button onclick="closeCheckout()" class="w-full text-gray-400 text-sm">إلغاء</button>
+        <div class="bg-white w-full rounded-t-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h3 class="text-lg font-bold mb-4 border-b pb-2 flex justify-between">إتمام الطلب <span onclick="closeCheckout()" class="text-gray-400"><i class="fas fa-times"></i></span></h3>
+            <div id="cart-items-preview" class="mb-4 text-xs text-gray-500 space-y-1"></div>
+            <div class="space-y-3">
+                <input type="text" id="cust-name" placeholder="الاسم بالكامل" class="w-full bg-gray-50 border p-3 rounded-xl focus:outline-blue-500 text-sm">
+                <input type="tel" id="cust-phone" placeholder="رقم الموبايل" class="w-full bg-gray-50 border p-3 rounded-xl focus:outline-blue-500 text-sm">
+                <div class="relative">
+                    <textarea id="cust-address" placeholder="العنوان بالتفصيل" class="w-full bg-gray-50 border p-3 rounded-xl focus:outline-blue-500 text-sm h-20"></textarea>
+                    <button onclick="getLocation()" class="absolute left-2 bottom-2 bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[10px] font-bold border border-blue-200"><i class="fas fa-map-marker-alt"></i> تحديد موقعي</button>
+                </div>
+                <div id="location-status" class="text-[10px] text-emerald-600 font-bold hidden">تم تحديد الموقع بنجاح ✓</div>
+                <div class="flex justify-between items-center font-bold text-lg text-blue-700 pt-2 border-t"><span>الإجمالي:</span><span id="cart-total-display">0 ج.م</span></div>
+                <button id="sendBtn" onclick="submitOrder()" class="w-full pharmacy-gradient text-white py-4 rounded-2xl font-bold shadow-lg mt-2">تأكيد وإرسال الطلب</button>
             </div>
         </div>
     </div>
@@ -94,31 +96,49 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbw6I4sitywB6Y3-_s8PFG_wolbbd_ysLw8WUdwmuLS26XmyyhUqWOrjKUoOCiJV1hx7/exec";
         let cart = [];
+        let allProducts = [];
         let waNumber = "";
+        let userLocation = "";
 
         var swiper = new Swiper(".mySwiper", { slidesPerView: "auto", spaceBetween: 15 });
 
         async function loadAppData() {
             try {
+                // استرجاع بيانات العميل المحفوظة
+                document.getElementById('cust-name').value = localStorage.getItem('hany_name') || "";
+                document.getElementById('cust-phone').value = localStorage.getItem('hany_phone') || "";
+                document.getElementById('cust-address').value = localStorage.getItem('hany_address') || "";
+
                 const adminRes = await fetch(`${API_URL}?sheet=Admin`);
                 const adminData = await adminRes.json();
                 waNumber = adminData.find(row => row.SettingName === 'WhatsAppNumber')?.Value;
                 if (waNumber) document.getElementById('whatsappBtn').href = `https://wa.me/${waNumber}`;
 
                 const productRes = await fetch(`${API_URL}?sheet=Products`);
-                const products = await productRes.json();
-                const container = document.getElementById('products-list');
-                container.innerHTML = products.map(item => `
-                    <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center relative">
-                        <img src="${item.Image || 'https://via.placeholder.com/150'}" class="w-full h-28 object-contain mb-3 mt-4">
-                        <h3 class="font-bold text-sm text-gray-800 text-right w-full truncate">${item.Name}</h3>
-                        <div class="flex justify-between items-center w-full mt-3">
-                            <p class="text-blue-600 font-bold text-sm">${item.Price} ج.م</p>
-                            <button onclick="addToCart('${item.Name}', ${item.Price})" class="bg-blue-50 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-transform"><i class="fas fa-plus text-xs"></i></button>
-                        </div>
-                    </div>
-                `).join('');
+                allProducts = await productRes.json();
+                renderProducts(allProducts);
             } catch (e) { console.error(e); }
+        }
+
+        function renderProducts(list) {
+            const container = document.getElementById('products-list');
+            container.innerHTML = list.map(item => `
+                <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center relative active:scale-95 transition-transform">
+                    <img src="${item.Image || 'https://via.placeholder.com/150'}" class="w-full h-24 object-contain mb-2 mt-2">
+                    <h3 class="font-bold text-xs text-gray-800 text-center w-full truncate">${item.Name}</h3>
+                    <div class="flex justify-between items-center w-full mt-2">
+                        <p class="text-blue-600 font-bold text-xs">${item.Price} ج.م</p>
+                        <button onclick="addToCart('${item.Name}', ${item.Price})" class="bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center"><i class="fas fa-plus text-[10px]"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts(cat, btn) {
+            document.querySelectorAll('#tabs-container button').forEach(b => b.classList.remove('active-tab'));
+            btn.classList.add('active-tab');
+            if(cat === 'الكل') renderProducts(allProducts);
+            else renderProducts(allProducts.filter(p => p.Category === cat));
         }
 
         function addToCart(name, price) {
@@ -127,52 +147,77 @@
         }
 
         function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
             const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cart-badge').innerText = cart.length;
+            document.getElementById('cart-total-nav').innerText = `${total} ج.م`;
             document.getElementById('cart-total-display').innerText = `${total} ج.م`;
             document.getElementById('cart-items-preview').innerHTML = cart.map((item, i) => `<div>${i+1}. ${item.name} (${item.price} ج.م)</div>`).join('');
         }
 
-        function openCheckout(type) {
-            if(cart.length === 0 && type !== 'prescription') return alert("السلة فارغة!");
+        function openCheckout() {
             document.getElementById('checkoutModal').classList.add('active');
         }
 
         function closeCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    userLocation = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                    document.getElementById('location-status').classList.remove('hidden');
+                }, () => alert("برجاء تفعيل الـ GPS في هاتفك"));
+            }
+        }
 
         async function submitOrder() {
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
             const address = document.getElementById('cust-address').value;
 
-            if(!name || !phone || !address) return alert("برجاء استكمال كافة البيانات!");
+            if(!name || !phone || !address) return alert("برجاء استكمال البيانات");
+
+            // حفظ البيانات للمرة القادمة
+            localStorage.setItem('hany_name', name);
+            localStorage.setItem('hany_phone', phone);
+            localStorage.setItem('hany_address', address);
+
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true; btn.innerText = "جاري الإرسال...";
 
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            const orderID = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+            const now = new Date();
+            const orderID = now.getTime().toString().slice(-6); // رقم فاتورة تسلسلي مبني على الوقت
             const details = cart.map((item, i) => `${i+1}- ${item.name}`).join('\n');
 
-            // إرسال البيانات لجوجل شيت (Orders)
             const orderData = {
                 sheet: "Orders",
                 OrderID: orderID,
                 CustomerName: name,
                 Phone: phone,
-                OrderDetails: details + "\nالعنوان: " + address,
+                OrderDetails: details + "\n\nالموقع: " + (userLocation || "لم يحدد"),
                 Total: total,
                 Status: "قيد الانتظار",
-                Date: new Date().toLocaleString('ar-EG')
+                Date: now.toLocaleString('ar-EG')
             };
 
             try {
-                fetch(API_URL, { method: 'POST', body: JSON.stringify(orderData) });
-                
+                // إرسال البيانات للشيت
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+
                 // تجهيز رسالة الواتساب
-                let waMsg = `*طلب جديد من صيدلية د. هاني*\n`;
-                waMsg += `*رقم الفاتورة:* ${orderID}\n`;
+                let waMsg = `*طلب جديد - صيدلية د. هاني*\n`;
+                waMsg += `*رقم الفاتورة:* #${orderID}\n`;
                 waMsg += `--------------------------\n`;
                 waMsg += `*العميل:* ${name}\n`;
                 waMsg += `*الهاتف:* ${phone}\n`;
                 waMsg += `*العنوان:* ${address}\n`;
+                if(userLocation) waMsg += `📍 *الموقع:* ${userLocation}\n`;
                 waMsg += `--------------------------\n`;
                 waMsg += `*الأصناف:*\n${details}\n`;
                 waMsg += `--------------------------\n`;
@@ -180,7 +225,11 @@
 
                 window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(waMsg)}`, '_blank');
                 cart = []; updateCartUI(); closeCheckout();
-            } catch (e) { alert("حدث خطأ في الإرسال"); }
+                btn.disabled = false; btn.innerText = "تأكيد وإرسال الطلب";
+            } catch (e) { 
+                alert("حدث خطأ، حاول مجدداً");
+                btn.disabled = false;
+            }
         }
 
         window.onload = loadAppData;
