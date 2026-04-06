@@ -23,14 +23,12 @@
     </div>
 
     <div class="p-4 grid grid-cols-2 gap-4" id="categories">
-        <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
-            <div class="text-blue-500 text-3xl mb-2"><i class="fas fa-pills"></i></div>
-            <p class="font-bold">الأدوية</p>
-        </div>
-        <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
-            <div class="text-pink-500 text-3xl mb-2"><i class="fas fa-magic"></i></div>
-            <p class="font-bold">التجميل</p>
-        </div>
+            <div class="p-4 flex justify-between items-center">
+        <h3 class="font-bold text-lg">الأصناف المتوفرة</h3>
+    </div>
+    <div class="p-4 grid grid-cols-2 gap-4" id="products-list">
+        <p class="text-center col-span-2 text-gray-400">جاري تحميل الأدوية...</p>
+    </div>
     </div>
 
     <a href="#" id="whatsappBtn" class="fixed bottom-6 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-50">
@@ -41,24 +39,39 @@
     // الحصول على الرابط من البيئة أو وضعه مباشرة للتجربة السريعة
     const API_URL = "https://script.google.com/macros/s/AKfycbw6I4sitywB6Y3-_s8PFG_wolbbd_ysLw8WUdwmuLS26XmyyhUqWOrjKUoOCiJV1hx7/exec";
 
-    async function loadAppData() {
+        async function loadAppData() {
         try {
-            // 1. جلب إعدادات الصيدلية (رابط الواتساب)
+            // 1. جلب إعدادات الواتساب من شيت Admin
             const adminRes = await fetch(`${API_URL}?sheet=Admin`);
             const adminData = await adminRes.json();
             const whatsapp = adminData.find(row => row.SettingName === 'WhatsAppNumber')?.Value;
-            
-            if (whatsapp) {
-                document.getElementById('whatsappBtn').href = `https://wa.me/${whatsapp}`;
-            }
+            if (whatsapp) document.getElementById('whatsappBtn').href = `https://wa.me/${whatsapp}`;
 
-            // 2. جلب المنتجات (اختياري الآن للتأكد من الربط)
+            // 2. جلب المنتجات من شيت Products
             const productRes = await fetch(`${API_URL}?sheet=Products`);
             const products = await productRes.json();
-            console.log("Products Loaded:", products);
+            
+            const productsContainer = document.getElementById('products-list');
+            productsContainer.innerHTML = ''; // مسح محتوى التحميل
+
+            if (products.length === 0) {
+                productsContainer.innerHTML = '<p class="text-center col-span-2 text-gray-400">لا توجد أدوية متوفرة حالياً</p>';
+                return;
+            }
+
+            products.forEach(item => {
+                productsContainer.innerHTML += `
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
+                        <img src="${item.Image || 'https://via.placeholder.com/100?text=Medicine'}" class="w-20 h-20 object-contain mb-2">
+                        <h3 class="font-bold text-sm text-center">${item.Name}</h3>
+                        <p class="text-blue-600 font-bold mt-1">${item.Price} ج.م</p>
+                        <button onclick="addToCart('${item.Name}', ${item.Price})" class="mt-2 bg-blue-50 text-blue-600 px-4 py-1 rounded-lg text-xs font-bold w-full border border-blue-100">أضف</button>
+                    </div>
+                `;
+            });
 
         } catch (error) {
-            console.error("Error loading data:", error);
+            console.error("Error:", error);
         }
     }
 
