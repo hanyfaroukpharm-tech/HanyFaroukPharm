@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صيدلية د. هاني فاروق</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-blue-600 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold">صيدلية د. هاني فاروق</h1>
+            <i class="fas fa-prescription-bottle-alt text-2xl"></i>
+        </div>
+    </header>
+
+    <div class="m-4 bg-blue-100 p-6 rounded-2xl text-center border-2 border-blue-200">
+        <h2 class="text-blue-800 font-bold text-lg">أهلاً بك في صيدليتك الرقمية</h2>
+        <p class="text-blue-600 text-sm">أرسل الروشتة وسنقوم بتوصيل الدواء فوراً</p>
+        <button class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full font-bold shadow-md">اطلب الآن</button>
+    </div>
+
+    <div class="p-4 grid grid-cols-2 gap-4" id="categories">
+        <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
+            <div class="text-blue-500 text-3xl mb-2"><i class="fas fa-pills"></i></div>
+            <p class="font-bold">الأدوية</p>
+        </div>
+        <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
+            <div class="text-pink-500 text-3xl mb-2"><i class="fas fa-magic"></i></div>
+            <p class="font-bold">التجميل</p>
+        </div>
+    </div>
+
+    <a href="#" id="whatsappBtn" class="fixed bottom-6 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-50">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        // سنضيف هنا لاحقاً كود جلب البيانات من Google Sheets
+        const SHEET_URL = "YOUR_API_URL_HERE"; 
+        console.log("App Ready");
+    </script>
+</body>
+</html>
