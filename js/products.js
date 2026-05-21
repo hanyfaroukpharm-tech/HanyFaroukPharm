@@ -1,4 +1,3 @@
-
 // ============================================================
 //  products.js — عرض المنتجات، فلترة، بحث
 // ============================================================
@@ -52,7 +51,7 @@ const Products = {
         <div class="flex justify-between items-center w-full mt-auto pt-2 border-t border-gray-50">
           <p class="text-blue-600 font-bold text-sm">${item.Price} ج.م</p>
           <button 
-            onclick="Products.addToCart('${item.ID}', '${item.Name}', ${item.Price}, ${item.Stock})"
+            onclick="Products.addToCart('${item.ID}', '${item.Name}', ${item.Price}, ${item.Stock}, this)"
             class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform ${item.Stock == 0 ? 'opacity-40 cursor-not-allowed' : ''}"
             ${item.Stock == 0 ? "disabled" : ""}
           >
@@ -64,18 +63,19 @@ const Products = {
   },
 
   // ➕ إضافة للسلة من بطاقة المنتج
-  addToCart(id, name, price, stock) {
+  addToCart(id, name, price, stock, btn) {
     if (stock == 0) return;
     Cart.add({ id: String(id), name, price: Number(price) });
 
     // Flash تأكيد بسيط
-    const btn = event.currentTarget;
-    btn.innerHTML = `<i class="fas fa-check text-xs"></i>`;
-    btn.classList.replace("bg-blue-600", "bg-green-500");
-    setTimeout(() => {
-      btn.innerHTML = `<i class="fas fa-plus text-xs"></i>`;
-      btn.classList.replace("bg-green-500", "bg-blue-600");
-    }, 700);
+    if (btn) {
+      btn.innerHTML = `<i class="fas fa-check text-xs"></i>`;
+      btn.classList.replace("bg-blue-600", "bg-green-500");
+      setTimeout(() => {
+        btn.innerHTML = `<i class="fas fa-plus text-xs"></i>`;
+        btn.classList.replace("bg-green-500", "bg-blue-600");
+      }, 700);
+    }
   },
 
   // 🔍 بحث في المنتجات
