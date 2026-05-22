@@ -258,11 +258,191 @@
   <script src="js/ui.js"></script>
   <script src="js/app.js"></script>
 
-<!-- تسجيل Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator)
-      navigator.serviceWorker.register('/sw.js');
-  </script>
+<!-- ══════════════════════════════════
+     PWA Install Banner
+══════════════════════════════════ -->
+
+<!-- البانر نفسه — مخفي في الأول -->
+<div id="pwa-banner" style="
+  display:none;
+  position:fixed;
+  bottom:90px;
+  left:12px;
+  right:12px;
+  z-index:9999;
+  background:linear-gradient(135deg,#0284c7,#0369a1);
+  border-radius:20px;
+  padding:16px 18px;
+  box-shadow:0 8px 32px rgba(2,132,199,0.45);
+  color:white;
+  font-family:'Cairo',sans-serif;
+  animation: slideUpBanner .4s cubic-bezier(.34,1.56,.64,1);
+">
+  <style>
+    @keyframes slideUpBanner {
+      from { transform:translateY(20px); opacity:0; }
+      to   { transform:translateY(0);    opacity:1; }
+    }
+  </style>
+
+  <div style="display:flex;align-items:center;gap:12px;">
+    <!-- اللوجو -->
+    <img src="images/logo.avif"
+      style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;"
+      onerror="this.style.display='none'"
+    >
+
+    <!-- النص -->
+    <div style="flex:1;min-width:0;">
+      <p style="font-weight:900;font-size:14px;margin:0 0 2px;">ثبّت التطبيق على موبايلك</p>
+      <p style="font-size:11px;opacity:0.8;margin:0;">وصول سريع بدون فتح المتصفح</p>
+    </div>
+
+    <!-- زرار الإغلاق -->
+    <button onclick="closePwaBanner()" style="
+      background:rgba(255,255,255,0.2);
+      border:none;
+      color:white;
+      width:28px;height:28px;
+      border-radius:50%;
+      font-size:14px;
+      cursor:pointer;
+      flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+    ">✕</button>
+  </div>
+
+  <!-- أزرار التثبيت -->
+  <div style="display:flex;gap:10px;margin-top:12px;">
+    <button id="pwa-install-btn" onclick="installPwa()" style="
+      flex:1;
+      background:white;
+      color:#0284c7;
+      border:none;
+      border-radius:12px;
+      padding:10px;
+      font-family:'Cairo',sans-serif;
+      font-weight:900;
+      font-size:13px;
+      cursor:pointer;
+      box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    ">📲 تثبيت التطبيق</button>
+
+    <button onclick="closePwaBanner()" style="
+      background:rgba(255,255,255,0.15);
+      color:white;
+      border:1px solid rgba(255,255,255,0.3);
+      border-radius:12px;
+      padding:10px 16px;
+      font-family:'Cairo',sans-serif;
+      font-weight:700;
+      font-size:12px;
+      cursor:pointer;
+    ">لاحقاً</button>
+  </div>
+</div>
+
+<!-- بانر خاص بـ iOS (مش بيدعم beforeinstallprompt) -->
+<div id="ios-banner" style="
+  display:none;
+  position:fixed;
+  bottom:90px;
+  left:12px;
+  right:12px;
+  z-index:9999;
+  background:linear-gradient(135deg,#0284c7,#0369a1);
+  border-radius:20px;
+  padding:16px 18px;
+  box-shadow:0 8px 32px rgba(2,132,199,0.45);
+  color:white;
+  font-family:'Cairo',sans-serif;
+  animation: slideUpBanner .4s cubic-bezier(.34,1.56,.64,1);
+">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <img src="images/logo.avif"
+      style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;"
+      onerror="this.style.display='none'"
+    >
+    <div style="flex:1;">
+      <p style="font-weight:900;font-size:14px;margin:0 0 2px;">ثبّت التطبيق على iPhone</p>
+      <p style="font-size:11px;opacity:0.8;margin:0;">اضغط <strong>⎙ مشاركة</strong> ثم <strong>"Add to Home Screen"</strong></p>
+    </div>
+    <button onclick="closeIosBanner()" style="
+      background:rgba(255,255,255,0.2);border:none;color:white;
+      width:28px;height:28px;border-radius:50%;font-size:14px;
+      cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    ">✕</button>
+  </div>
+  <!-- سهم يشاور على زرار المشاركة -->
+  <div style="text-align:center;margin-top:10px;font-size:11px;opacity:0.7;">
+    ⬇️ زرار المشاركة في أسفل الشاشة
+  </div>
+</div>
+
+<script>
+  // ── متغير لحفظ حدث التثبيت ──
+  let deferredPrompt = null;
+
+  // ── اكتشف النوع ──
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+
+  // ── تسجيل Service Worker ──
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.warn);
+  }
+
+  // ── استقبال حدث التثبيت (Android / Chrome) ──
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    // أظهر البانر بعد ثانيتين لو التطبيق مش متنصب
+    if (!isInStandaloneMode && !sessionStorage.getItem('pwa_dismissed')) {
+      setTimeout(() => {
+        document.getElementById('pwa-banner').style.display = 'block';
+      }, 2000);
+    }
+  });
+
+  // ── iOS ──
+  if (isIos && !isInStandaloneMode && !sessionStorage.getItem('pwa_dismissed')) {
+    setTimeout(() => {
+      document.getElementById('ios-banner').style.display = 'block';
+    }, 2000);
+  }
+
+  // ── تثبيت ──
+  async function installPwa() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('pwa-banner').style.display = 'none';
+    if (outcome === 'accepted') {
+      sessionStorage.setItem('pwa_dismissed', 'true');
+    }
+  }
+
+  // ── إغلاق البانر ──
+  function closePwaBanner() {
+    document.getElementById('pwa-banner').style.display = 'none';
+    // يعيد الظهور في كل زيارة جديدة (مش بنحفظ في localStorage)
+    sessionStorage.setItem('pwa_dismissed', 'true');
+  }
+
+  function closeIosBanner() {
+    document.getElementById('ios-banner').style.display = 'none';
+    sessionStorage.setItem('pwa_dismissed', 'true');
+  }
+
+  // ── لو اتنصب، اخفي البانر تلقائياً ──
+  window.addEventListener('appinstalled', () => {
+    document.getElementById('pwa-banner').style.display = 'none';
+    document.getElementById('ios-banner').style.display = 'none';
+  });
+</script>
 
 </body>
 </html>
