@@ -38,13 +38,13 @@
   <div class="relative z-10 p-5">
     <div class="flex justify-between items-center">
 
-      <div class="flex items-center gap-3">
-        <div class="logo-wrapper">
+      <div class="flex items-center gap-4"> <div class="logo-wrapper">
           <img
             src="images/logo.avif"
             alt="لوجو الصيدلية"
-            class="w-14 h-14 rounded-2xl object-cover border-2 border-white/40 shadow-xl"
-            onerror="this.outerHTML='<div class=\'bg-white/20 p-2 rounded-xl\'><i class=\'fas fa-hand-holding-medical text-2xl text-white\'></i></div>'"
+            /* ملاحظة: تم إزالة w-14 h-14 ليعتمد المقاس على ملف الـ CSS (70px) */
+            class="rounded-2xl object-cover border-2 border-white/40 shadow-xl"
+            onerror="this.outerHTML='<div class=\'bg-white/20 p-2 rounded-xl\'><i class=\'fas fa-hand-holding-medical text-3xl text-white\'></i></div>'"
           >
         </div>
         
@@ -58,15 +58,14 @@
       </button>
     </div>
 
-    <div id="search-bar" class="hidden mt-4 animate-fade-in">
-      <div class="flex items-center gap-2">
+    <div id="search-bar" class="hidden mt-6 animate-fade-in"> <div class="flex items-center gap-2">
         <input
           id="search-input"
           type="text"
           placeholder="ابحث عن دواء أو منتج..."
           class="search-input-field"
         >
-        <button id="close-search" class="close-search-btn bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center text-white">
+        <button id="close-search" class="close-search-btn bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-white">
           <i class="fas fa-times"></i>
         </button>
       </div>
