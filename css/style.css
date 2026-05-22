@@ -77,8 +77,8 @@ header .relative.z-10 {
 .status-badge {
   background-color: #22c55e;
   color: white;
-  padding: 6px 14px;
-  border-radius: 20px;
+  padding: 6px 20px;
+  border-radius: 12px;
   font-size: 12px;
   font-weight: bold;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
