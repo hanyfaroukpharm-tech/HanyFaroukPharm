@@ -23,17 +23,16 @@ body {
   min-height: 100vh;
 }
 
-/* ── التعديلات النهائية للـ Header (المحدثة لتكبير الغلاف واللوجو) ── */
+/* ── التعديلات النهائية للـ Header (تصميم الـ Cover الكامل) ── */
 
-/* 1. الحاوية الرئيسية: قمت بزيادة min-height لتكبير مساحة الـ Cover */
+/* 1. الحاوية الرئيسية: زيادة الارتفاع ليعطي مساحة سينمائية للغلاف */
 header {
   position: relative;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  min-height: 160px; /* تم التكبير من 110px إلى 160px لظهور الغلاف بوضوح */
+  height: 200px; /* تم التكبير لـ 200px ليظهر الكفر بوضوح تام */
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 /* 2. حاوية صورة الغلاف */
@@ -53,59 +52,55 @@ header {
   display: block;
 }
 
-/* 3. طبقة التظليل الذكية */
+/* 3. طبقة التظليل: تم تعديلها لتكون داكنة في الأسفل فقط لبروز الأزرار */
 .header-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* تم تعديل التدرج ليعطي تركيزاً بصرياً أجمل على اللوجو الجديد */
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%);
+  /* شفاف في الأعلى ويدكن تدريجياً في الأسفل عند الأزرار */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 100%);
   z-index: 1; 
 }
 
-/* 4. محتوى الهيدر */
-header .relative {
+/* 4. محتوى الهيدر: تم رفعه ليكون فوق التظليل */
+header .relative.z-10 {
   z-index: 10;
-}
-
-/* تعديل حجم اللوجو: قمت بإنشاء كلاس خاص للتحكم في اللوجو من الـ CSS */
-.logo-wrapper img {
-  width: 70px !important;  /* تم التكبير من 56px إلى 70px */
-  height: 70px !important;
-  border-radius: 1.25rem;
-  border-width: 3px;       /* زيادة سمك الإطار ليبرز اللوجو */
-  transition: transform 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* دفع العناصر لأسفل الكفر */
 }
 
 /* 5. شارة الحالة (مفتوح الآن) */
 .status-badge {
   background-color: #22c55e;
   color: white;
-  padding: 4px 12px;      /* تكبير بسيط في الحشو */
-  border-radius: 99px;
-  font-size: 11px;        /* تكبير الخط قليلاً */
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 12px;
   font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  margin-right: 5px;      /* إزاحة بسيطة عن اللوجو */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: inline-flex;
+  align-items: center;
 }
 
-/* 6. زرار البحث الدائري */
+/* 6. زرار البحث المربع المتناسق مع الشارة */
 .search-trigger-btn {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  width: 48px;            /* تكبير زر البحث ليتناسب مع الحجم الجديد */
-  height: 48px;
-  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px; /* جعلته متناسقاً مع زوايا الشارة */
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   font-size: 1.1rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .search-trigger-btn:active {
@@ -113,22 +108,27 @@ header .relative {
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* 7. مدخل البحث */
+/* 7. مدخل البحث (يظهر فوق الأزرار عند الفتح) */
 .search-input-field {
   width: 100%;
-  background: var(--white);
+  background: white;
   color: #1e293b;
   border-radius: 15px;
-  padding: 12px 20px;
+  padding: 12px 18px;
   font-size: 15px;
   border: none;
   outline: none;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
 }
 
-.pharmacy-gradient {
-  /* مدمج */
+/* زر إغلاق البحث */
+.close-search-btn {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  transition: all 0.2s;
 }
+
+/* تم حذف تنسيقات logo-wrapper لعدم الحاجة إليها */
 
 /* ── إخفاء الـ Scrollbar ── */
 .no-scrollbar::-webkit-scrollbar { display: none; }
