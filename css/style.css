@@ -23,8 +23,13 @@ body {
   min-height: 100vh;
 }
 
-/* ── التعديلات النهائية للـ Header (تصميم الـ Cover الكامل) ── */
+/* ── Gradient رئيسي (للأزرار) ── */
+.pharmacy-gradient {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: white;
+}
 
+/* ── Header ── */
 header {
   position: relative;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
@@ -36,27 +41,22 @@ header {
 
 .header-cover-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   z-index: 0;
 }
 
 .header-cover-img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
   display: block;
 }
 
 .header-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 100%);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%);
   z-index: 1;
 }
 
@@ -81,16 +81,15 @@ header .relative.z-10 {
 }
 
 .search-trigger-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255,255,255,0.2);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  width: 30px;
-  height: 30px;
+  width: 30px; height: 30px;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255,255,255,0.3);
   color: white;
   font-size: 1.1rem;
   transition: all 0.2s ease;
@@ -98,7 +97,7 @@ header .relative.z-10 {
 
 .search-trigger-btn:active {
   transform: scale(0.9);
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255,255,255,0.4);
 }
 
 .search-input-field {
@@ -110,11 +109,11 @@ header .relative.z-10 {
   font-size: 15px;
   border: none;
   outline: none;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 .close-search-btn {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255,255,255,0.15);
   backdrop-filter: blur(5px);
   transition: all 0.2s;
 }
@@ -128,7 +127,7 @@ header .relative.z-10 {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0,0,0,0.55);
   z-index: 100;
   align-items: flex-end;
   backdrop-filter: blur(2px);
@@ -152,16 +151,14 @@ header .relative.z-10 {
 .active-tab {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
   color: white !important;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+  box-shadow: 0 4px 12px rgba(2,132,199,0.35);
 }
 
 /* ── بطاقة المنتج ── */
 .product-card {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.product-card:active {
-  transform: scale(0.96);
-}
+.product-card:active { transform: scale(0.96); }
 
 /* ── Badge السلة ── */
 #cart-badge {
@@ -189,10 +186,8 @@ header .relative.z-10 {
 }
 
 /* ── زرار الواتساب ── */
-#whatsappBtn {
-  animation: pulse-wa 2s infinite;
-}
+#whatsappBtn { animation: pulse-wa 2s infinite; }
 @keyframes pulse-wa {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-  50%       { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+  50%       { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
 }
