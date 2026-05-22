@@ -1,5 +1,5 @@
 /* ============================================================
-   style.css — كل الـ Styles الخاصة بالتطبيق
+   style.css — المحدث لحل مشكلة تداخل الـ Header
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
@@ -23,22 +23,78 @@ body {
   min-height: 100vh;
 }
 
-/* ── Gradient رئيسي ── */
-.pharmacy-gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+/* ── التعديلات الجديدة للـ Header ── */
+
+/* الحاوية الرئيسية للهيدر */
+header {
+  position: relative;
+  background: var(--primary-dark); /* لون احتياطي */
 }
 
-/* ── Header Cover ── */
-.header-cover {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 0 0 1.5rem 1.5rem;
+/* حاوية صورة الغلاف */
+.header-cover-container {
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0.15;
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.header-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* طبقة تظليل لبروز النص الأبيض */
+.header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
+}
+
+/* شارة الحالة (مفتوح الآن) */
+.status-badge {
+  background-color: #22c55e;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+/* زرار البحث الدائري */
+.search-trigger-btn {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* مدخل البحث الجديد */
+.search-input-field {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  border-radius: 12px;
+  padding: 8px 15px;
+  font-size: 14px;
+  outline: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Gradient رئيسي ── */
+.pharmacy-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
 }
 
 /* ── إخفاء الـ Scrollbar ── */
@@ -105,13 +161,6 @@ body {
   overflow: hidden;
 }
 
-/* ── Input Focus ── */
-input:focus, textarea:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 0;
-  border-color: transparent;
-}
-
 /* ── زرار الواتساب ── */
 #whatsappBtn {
   animation: pulse-wa 2s infinite;
@@ -120,4 +169,3 @@ input:focus, textarea:focus {
   0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
   50%       { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
 }
-
