@@ -1,0 +1,34 @@
+{
+  "name": "صيدلية د. هاني فاروق",
+  "short_name": "صيدلية هاني",
+  "description": "خدمة دوائية متميزة — أدوية، تجميل، أجهزة طبية، توصيل للمنزل",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020c1b",
+  "theme_color": "#0284c7",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "images/logo_icon.avif",
+      "sizes": "192x192",
+      "type": "image/avif",
+      "purpose": "any"
+    },
+    {
+      "src": "images/logo.avif",
+      "sizes": "512x512",
+      "type": "image/avif",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/cover.avif",
+      "sizes": "1200x420",
+      "type": "image/avif"
+    }
+  ],
+  "categories": ["medical", "shopping", "health"]
+}

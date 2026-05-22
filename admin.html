@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الأدمن — صيدلية د. هاني فاروق</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Cairo', sans-serif; background: #f0f7ff; }
+    .pharmacy-gradient { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+    .status-waiting  { background:#fef9c3; color:#854d0e; border:1px solid #fde68a; }
+    .status-progress { background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe; }
+    .status-done     { background:#dcfce7; color:#166534; border:1px solid #bbf7d0; }
+    .status-cancel   { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
+    .card-enter { animation: fadeUp .3s ease both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ══ شاشة تسجيل الدخول ══ -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-xl p-8 text-center">
+
+      <div class="pharmacy-gradient w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <i class="fas fa-shield-alt text-2xl text-white"></i>
+      </div>
+
+      <h1 class="text-xl font-black text-gray-800 mb-1">لوحة التحكم</h1>
+      <p class="text-sm text-gray-400 mb-6">صيدلية د. هاني فاروق</p>
+
+      <input
+        id="password-input"
+        type="password"
+        placeholder="كلمة المرور"
+        class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 text-center text-lg font-bold tracking-widest focus:outline-none focus:border-blue-400 mb-3"
+        onkeydown="if(event.key==='Enter') login()"
+      >
+      <div id="login-error" class="hidden text-red-500 text-sm font-bold mb-3">
+        ❌ كلمة المرور غلط
+      </div>
+      <button onclick="login()" class="w-full pharmacy-gradient text-white py-3 rounded-2xl font-bold shadow-md active:scale-95 transition-transform">
+        دخول
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ لوحة الأدمن (مخفية في الأول) ══ -->
+  <div id="admin-panel" class="hidden min-h-screen">
+
+    <!-- Header -->
+    <header class="pharmacy-gradient text-white p-4 shadow-md sticky top-0 z-50">
+      <div class="flex justify-between items-center max-w-2xl mx-auto">
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center">
+            <i class="fas fa-clipboard-list"></i>
+          </div>
+          <div>
+            <h1 class="font-black text-base leading-tight">لوحة الطلبات</h1>
+            <p class="text-[10px] opacity-70">صيدلية د. هاني فاروق</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="loadOrders()" id="refresh-btn"
+            class="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+          <button onclick="logout()"
+            class="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- إحصائيات سريعة -->
+    <div class="p-4 max-w-2xl mx-auto">
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-blue-50">
+          <div id="stat-total" class="text-2xl font-black text-blue-600">—</div>
+          <div class="text-[10px] text-gray-400 font-bold mt-1">إجمالي الطلبات</div>
+        </div>
+        <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-yellow-50">
+          <div id="stat-waiting" class="text-2xl font-black text-yellow-500">—</div>
+          <div class="text-[10px] text-gray-400 font-bold mt-1">قيد الانتظار</div>
+        </div>
+        <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-green-50">
+          <div id="stat-done" class="text-2xl font-black text-green-500">—</div>
+          <div class="text-[10px] text-gray-400 font-bold mt-1">تم التسليم</div>
+        </div>
+      </div>
+
+      <!-- فلتر الحالة -->
+      <div class="flex gap-2 overflow-x-auto pb-2 mb-4 no-scrollbar">
+        <button onclick="filterOrders('الكل', this)"
+          class="filter-btn active-filter px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all">
+          الكل
+        </button>
+        <button onclick="filterOrders('قيد الانتظار', this)"
+          class="filter-btn bg-white text-gray-500 border border-gray-100 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap">
+          ⏳ قيد الانتظار
+        </button>
+        <button onclick="filterOrders('قيد التنفيذ', this)"
+          class="filter-btn bg-white text-gray-500 border border-gray-100 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap">
+          🔄 قيد التنفيذ
+        </button>
+        <button onclick="filterOrders('تم التسليم', this)"
+          class="filter-btn bg-white text-gray-500 border border-gray-100 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap">
+          ✅ تم التسليم
+        </button>
+      </div>
+
+      <!-- قائمة الطلبات -->
+      <div id="orders-list" class="space-y-3">
+        <div class="text-center py-16 text-gray-300">
+          <i class="fas fa-spinner fa-spin text-4xl mb-3 block"></i>
+          <p class="font-bold text-sm">جاري التحميل...</p>
+        </div>
+      </div>
+
+      <!-- آخر تحديث -->
+      <p id="last-update" class="text-center text-[10px] text-gray-300 mt-4 pb-6"></p>
+    </div>
+  </div>
+
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display:none; }
+    .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+    .active-filter { background:linear-gradient(135deg,#0284c7,#0369a1)!important; color:white!important; box-shadow:0 4px 12px rgba(2,132,199,0.3); }
+  </style>
+
+  <script src="js/config.js"></script>
+  <script>
+    let allOrders = [];
+    let adminPassword = "";
+
+    // ── تسجيل الدخول ──
+    async function login() {
+      const input = document.getElementById("password-input").value.trim();
+      const errEl = document.getElementById("login-error");
+
+      if (!input) return;
+
+      try {
+        // جلب كلمة المرور من الشيت
+        const res = await fetch(`${CONFIG.API_URL}?sheet=Admin`);
+        const rows = await res.json();
+        const saved = rows.find(r => r.SettingName === "AdminPassword")?.Value;
+        adminPassword = saved || "123456";
+
+        if (input === String(adminPassword)) {
+          sessionStorage.setItem("admin_auth", "true");
+          document.getElementById("login-screen").classList.add("hidden");
+          document.getElementById("admin-panel").classList.remove("hidden");
+          loadOrders();
+        } else {
+          errEl.classList.remove("hidden");
+          document.getElementById("password-input").value = "";
+          setTimeout(() => errEl.classList.add("hidden"), 2500);
+        }
+      } catch (e) {
+        // لو فشل تحميل الشيت استخدم الكلمة الافتراضية
+        if (input === "123456") {
+          document.getElementById("login-screen").classList.add("hidden");
+          document.getElementById("admin-panel").classList.remove("hidden");
+          loadOrders();
+        } else {
+          errEl.classList.remove("hidden");
+          setTimeout(() => errEl.classList.add("hidden"), 2500);
+        }
+      }
+    }
+
+    // ── تسجيل الخروج ──
+    function logout() {
+      sessionStorage.removeItem("admin_auth");
+      document.getElementById("admin-panel").classList.add("hidden");
+      document.getElementById("login-screen").classList.remove("hidden");
+      document.getElementById("password-input").value = "";
+    }
+
+    // ── تحميل الطلبات ──
+    async function loadOrders() {
+      const btn = document.getElementById("refresh-btn");
+      btn.querySelector("i").classList.add("fa-spin");
+
+      try {
+        const res = await fetch(`${CONFIG.API_URL}?sheet=Orders`);
+        allOrders = await res.json();
+        // عكس الترتيب — الأحدث أولاً
+        allOrders = allOrders.reverse();
+        updateStats();
+        renderOrders(allOrders);
+        document.getElementById("last-update").textContent =
+          `آخر تحديث: ${new Date().toLocaleTimeString("ar-EG")}`;
+      } catch (e) {
+        document.getElementById("orders-list").innerHTML = `
+          <div class="text-center py-16 text-gray-300">
+            <i class="fas fa-wifi text-4xl mb-3 block"></i>
+            <p class="font-bold text-sm">فشل تحميل الطلبات</p>
+            <button onclick="loadOrders()" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">إعادة المحاولة</button>
+          </div>`;
+      } finally {
+        btn.querySelector("i").classList.remove("fa-spin");
+      }
+    }
+
+    // ── إحصائيات ──
+    function updateStats() {
+      document.getElementById("stat-total").textContent   = allOrders.length;
+      document.getElementById("stat-waiting").textContent = allOrders.filter(o => o.Status === "قيد الانتظار").length;
+      document.getElementById("stat-done").textContent    = allOrders.filter(o => o.Status === "تم التسليم").length;
+    }
+
+    // ── فلترة ──
+    function filterOrders(status, btn) {
+      document.querySelectorAll(".filter-btn").forEach(b => {
+        b.classList.remove("active-filter");
+        b.classList.add("bg-white", "text-gray-500", "border", "border-gray-100");
+      });
+      btn.classList.add("active-filter");
+      btn.classList.remove("bg-white", "text-gray-500", "border", "border-gray-100");
+
+      const filtered = status === "الكل" ? allOrders : allOrders.filter(o => o.Status === status);
+      renderOrders(filtered);
+    }
+
+    // ── رسم الطلبات ──
+    function renderOrders(list) {
+      const container = document.getElementById("orders-list");
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-16 text-gray-300">
+            <i class="fas fa-box-open text-4xl mb-3 block"></i>
+            <p class="font-bold text-sm">مفيش طلبات</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = list.map((order, i) => {
+        const statusClass = {
+          "قيد الانتظار": "status-waiting",
+          "قيد التنفيذ":  "status-progress",
+          "تم التسليم":   "status-done",
+          "ملغي":         "status-cancel",
+        }[order.Status] || "status-waiting";
+
+        // استخرج الموقع لو موجود
+        const locationMatch = order.OrderDetails?.match(/https:\/\/www\.google\.com\/maps[^\s]*/);
+        const locationUrl   = locationMatch ? locationMatch[0] : null;
+        const detailsClean  = order.OrderDetails?.replace(/الموقع:?\s*https?:\/\/\S+/g, "").trim();
+
+        return `
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden card-enter" style="animation-delay:${i * 0.05}s">
+
+          <!-- هيدر الكارت -->
+          <div class="flex justify-between items-center p-4 pb-3 border-b border-gray-50">
+            <div class="flex items-center gap-2">
+              <div class="bg-blue-50 w-9 h-9 rounded-xl flex items-center justify-center text-blue-600 font-black text-sm">
+                #${order.OrderID || "—"}
+              </div>
+              <div>
+                <p class="font-black text-gray-800 text-sm">${order.CustomerName || "—"}</p>
+                <p class="text-[11px] text-gray-400">${order.Date || ""}</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full ${statusClass}">${order.Status || "قيد الانتظار"}</span>
+          </div>
+
+          <!-- تفاصيل -->
+          <div class="p-4 space-y-2">
+
+            <!-- الهاتف -->
+            <div class="flex items-center gap-2">
+              <i class="fas fa-phone text-blue-400 text-xs w-4"></i>
+              <a href="tel:${order.Phone}" class="text-sm text-blue-600 font-bold">${order.Phone || "—"}</a>
+            </div>
+
+            <!-- الأصناف -->
+            <div class="flex gap-2">
+              <i class="fas fa-shopping-bag text-blue-400 text-xs w-4 mt-1"></i>
+              <p class="text-xs text-gray-600 leading-relaxed flex-1 whitespace-pre-line">${detailsClean || "—"}</p>
+            </div>
+
+            <!-- الإجمالي -->
+            ${order.Total ? `
+            <div class="flex items-center gap-2">
+              <i class="fas fa-coins text-yellow-400 text-xs w-4"></i>
+              <span class="text-sm font-black text-gray-800">${order.Total} ج.م</span>
+            </div>` : ""}
+
+          </div>
+
+          <!-- أزرار التواصل -->
+          <div class="flex gap-2 px-4 pb-4">
+            <a href="https://wa.me/${order.Phone?.replace(/[^0-9]/g,"")}"
+              target="_blank"
+              class="flex-1 bg-green-500 text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform shadow-sm">
+              <i class="fab fa-whatsapp text-sm"></i> واتساب
+            </a>
+            <a href="tel:${order.Phone}"
+              class="flex-1 bg-blue-50 text-blue-600 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform border border-blue-100">
+              <i class="fas fa-phone text-sm"></i> اتصال
+            </a>
+            ${locationUrl ? `
+            <a href="${locationUrl}" target="_blank"
+              class="flex-1 bg-orange-50 text-orange-500 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform border border-orange-100">
+              <i class="fas fa-map-marker-alt text-sm"></i> موقع
+            </a>` : ""}
+          </div>
+
+        </div>`;
+      }).join("");
+    }
+
+    // ── تحقق من الجلسة عند فتح الصفحة ──
+    window.onload = () => {
+      if (sessionStorage.getItem("admin_auth") === "true") {
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("admin-panel").classList.remove("hidden");
+        loadOrders();
+      }
+    };
+
+    // ── تحديث تلقائي كل 60 ثانية ──
+    setInterval(() => {
+      if (sessionStorage.getItem("admin_auth") === "true") loadOrders();
+    }, 60000);
+  </script>
+</body>
+</html>
