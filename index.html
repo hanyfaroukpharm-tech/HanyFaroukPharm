@@ -35,30 +35,18 @@
     <div class="header-overlay"></div> 
   </div>
 
-  <div class="relative z-10 p-5">
-    <div class="flex justify-between items-center">
-
-      <div class="flex items-center gap-4"> <div class="logo-wrapper">
-          <img
-            src="images/logo.avif"
-            alt="لوجو الصيدلية"
-            /* ملاحظة: تم إزالة w-14 h-14 ليعتمد المقاس على ملف الـ CSS (70px) */
-            class="rounded-2xl object-cover border-2 border-white/40 shadow-xl"
-            onerror="this.outerHTML='<div class=\'bg-white/20 p-2 rounded-xl\'><i class=\'fas fa-hand-holding-medical text-3xl text-white\'></i></div>'"
-          >
-        </div>
-        
-        <div class="flex items-center">
-          <span id="pharmacy-status" class="status-badge">مفتوح الآن</span>
-        </div>
-      </div>
-
+  <div class="relative z-10 h-full p-5 flex flex-col justify-end">
+    
+    <div class="flex items-center justify-start gap-3">
+      <span id="pharmacy-status" class="status-badge">مفتوح الآن</span>
+      
       <button id="search-btn" class="search-trigger-btn" aria-label="بحث">
         <i class="fas fa-search"></i>
       </button>
     </div>
 
-    <div id="search-bar" class="hidden mt-6 animate-fade-in"> <div class="flex items-center gap-2">
+    <div id="search-bar" class="hidden mt-3 animate-fade-in"> 
+      <div class="flex items-center gap-2">
         <input
           id="search-input"
           type="text"
