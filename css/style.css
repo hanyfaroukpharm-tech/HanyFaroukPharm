@@ -93,7 +93,7 @@ header .relative.z-10 {
   -webkit-backdrop-filter: blur(10px);
   width: 35px;
   height: 35px;
-  border-radius: 12px; /* جعلته متناسقاً مع زوايا الشارة */
+  border-radius: 5px; /* جعلته متناسقاً مع زوايا الشارة */
   display: flex;
   align-items: center;
   justify-content: center;
