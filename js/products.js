@@ -3,8 +3,8 @@
 // ============================================================
 
 const Products = {
-  all: [],         // كل المنتجات
-  filtered: [],    // المنتجات المعروضة حالياً
+  all: [],
+  filtered: [],
 
   // 📦 تحميل المنتجات من الـ API
   async load() {
@@ -16,6 +16,13 @@ const Products = {
     } catch (e) {
       this.showError();
     }
+  },
+
+  // 🖼️ تحديد رابط الصورة
+  _getImageSrc(image) {
+    if (!image) return "images/products/default.avif";
+    if (image.startsWith("http")) return image;
+    return `images/products/${image}`;
   },
 
   // 🎨 رسم المنتجات على الشاشة
@@ -34,23 +41,23 @@ const Products = {
 
     container.innerHTML = list.map(item => `
       <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center relative active:scale-95 transition-transform duration-150">
-        
+
         ${item.Stock == 0 ? `<div class="absolute top-2 right-2 bg-red-100 text-red-500 text-[9px] font-bold px-2 py-1 rounded-full">نفذ</div>` : ""}
-        
-        <img 
-          src="${item.Image || "https://placehold.co/150x120/e0f2fe/0284c7?text=دواء"}" 
-          alt="${item.Name}" 
+
+        <img
+          src="${this._getImageSrc(item.Image)}"
+          alt="${item.Name}"
           class="w-full h-24 object-contain mb-2 mt-2 rounded-lg"
-          onerror="this.src='https://placehold.co/150x120/e0f2fe/0284c7?text=دواء'"
+          onerror="this.src='images/products/default.avif'"
         >
-        
+
         <h3 class="font-bold text-xs text-gray-800 text-center w-full leading-tight mb-1 line-clamp-2">${item.Name}</h3>
-        
+
         ${item.Description ? `<p class="text-[10px] text-gray-400 text-center w-full truncate mb-1">${item.Description}</p>` : ""}
-        
+
         <div class="flex justify-between items-center w-full mt-auto pt-2 border-t border-gray-50">
           <p class="text-blue-600 font-bold text-sm">${item.Price} ج.م</p>
-          <button 
+          <button
             onclick="Products.addToCart('${item.ID}', '${item.Name}', ${item.Price}, ${item.Stock}, this)"
             class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform ${item.Stock == 0 ? 'opacity-40 cursor-not-allowed' : ''}"
             ${item.Stock == 0 ? "disabled" : ""}
@@ -67,7 +74,6 @@ const Products = {
     if (stock == 0) return;
     Cart.add({ id: String(id), name, price: Number(price) });
 
-    // Flash تأكيد بسيط
     if (btn) {
       btn.innerHTML = `<i class="fas fa-check text-xs"></i>`;
       btn.classList.replace("bg-blue-600", "bg-green-500");
