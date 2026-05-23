@@ -105,6 +105,7 @@
 
   <!-- ══════════════════════════════════
 <!-- ══════════════════════════════════
+ <!-- ══════════════════════════════════
        بانر إرسال الروشتة
   ══════════════════════════════════ -->
   <div class="mx-4 my-4 bg-white p-4 rounded-2xl shadow-sm border border-blue-50 flex items-center justify-between">
@@ -138,40 +139,26 @@
 
       <div class="p-5 space-y-4 pb-16">
 
-        <!-- منطقة رفع الصورة -->
-        <div id="presc-upload-area"
-          onclick="Order.openCamera()"
-          class="border-2 border-dashed border-blue-200 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer bg-blue-50 active:bg-blue-100 transition-colors">
+        <!-- تعليمات الإرسال -->
+        <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 flex flex-col items-center gap-3 text-center">
           <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center text-blue-600">
             <i class="fas fa-camera text-2xl"></i>
           </div>
-          <p class="font-bold text-blue-600 text-sm">اضغط لتصوير الروشتة</p>
-          <p class="text-[10px] text-gray-400">أو اختر صورة من الجهاز</p>
-        </div>
-
-        <!-- input الكاميرا (مخفي) -->
-        <input
-          type="file"
-          id="presc-file-input"
-          accept="image/*"
-          capture="environment"
-          class="hidden"
-          onchange="Order.handleImageSelect(this)"
-        >
-
-        <!-- preview الصورة -->
-        <div id="presc-preview-wrap" class="hidden">
-          <div class="relative">
-            <img id="presc-preview-img" src="" alt="الروشتة" class="w-full rounded-2xl object-cover max-h-48">
-            <button
-              onclick="Order.resetImage()"
-              class="absolute top-2 left-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md">
-              <i class="fas fa-times text-xs"></i>
-            </button>
+          <p class="font-black text-blue-700 text-base">كيفية إرسال الروشتة</p>
+          <div class="bg-white rounded-xl p-3 w-full space-y-2 text-right">
+            <p class="text-sm text-gray-600 flex items-center gap-2">
+              <span class="bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+              اكتب اسمك ورقم موبايلك
+            </p>
+            <p class="text-sm text-gray-600 flex items-center gap-2">
+              <span class="bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+              اضغط "إرسال الروشتة" — هيفتح واتساب
+            </p>
+            <p class="text-sm text-gray-600 flex items-center gap-2">
+              <span class="bg-green-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+              ارسل الرسالة وارفق صورة الروشتة معاها
+            </p>
           </div>
-          <p class="text-center text-xs text-green-600 font-bold mt-2">
-            <i class="fas fa-check-circle ml-1"></i> تم اختيار الصورة بنجاح
-          </p>
         </div>
 
         <!-- بيانات العميل -->
@@ -194,14 +181,6 @@
             placeholder="ملاحظات إضافية (اختياري)..."
             class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl text-sm h-20 resize-none"
           ></textarea>
-        </div>
-
-        <!-- تنبيه -->
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 flex gap-2">
-          <i class="fas fa-info-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
-          <p class="text-xs text-amber-700 leading-relaxed">
-            بعد الضغط على إرسال، هيفتح واتساب — برجاء إرفاق صورة الروشتة في المحادثة
-          </p>
         </div>
 
         <!-- زرار الإرسال -->
