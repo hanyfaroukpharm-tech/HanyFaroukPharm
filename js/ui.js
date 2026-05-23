@@ -23,13 +23,11 @@ const UI = {
     const searchBtn   = document.getElementById("search-btn");
     const closeSearch = document.getElementById("close-search");
 
-    // زرار الـ Search في الهيدر يفتح بار البحث
     searchBtn?.addEventListener("click", () => {
       searchBar?.classList.remove("hidden");
       searchInput?.focus();
     });
 
-    // زرار الإغلاق
     closeSearch?.addEventListener("click", () => {
       searchBar?.classList.add("hidden");
       if (searchInput) searchInput.value = "";
@@ -37,18 +35,23 @@ const UI = {
       this.resetTabs();
     });
 
-    // البحث أثناء الكتابة
     searchInput?.addEventListener("input", () => {
       Products.search(searchInput.value);
     });
   },
 
-  // 🗂️ تبويبات الكاتيجوري
-  initTabs() {
+  // 🗂️ تبويبات الكاتيجوري — ديناميكية من الشيت
+  async initTabs() {
     const container = document.getElementById("tabs-container");
     if (!container) return;
 
-    container.innerHTML = CONFIG.CATEGORIES.map((cat, i) => `
+    // skeleton مؤقت
+    container.innerHTML = `<div class="h-9 w-16 bg-gray-200 rounded-full animate-pulse"></div>`.repeat(4);
+
+    // جلب الـ categories من الشيت
+    const categories = await API.getCategories();
+
+    container.innerHTML = categories.map((cat, i) => `
       <button
         onclick="UI.selectTab(this, '${cat}')"
         class="tab-btn ${i === 0 ? "active-tab" : "bg-white text-gray-500 border border-gray-100"} px-5 py-2 rounded-full font-bold whitespace-nowrap text-sm transition-all"
@@ -75,7 +78,7 @@ const UI = {
 
   // 🛒 فتح مودال الـ Checkout
   openCheckout() {
-    Cart.updateUI(); // تأكد إن القائمة محدّثة
+    Cart.updateUI();
     document.getElementById("checkoutModal")?.classList.add("active");
     document.body.style.overflow = "hidden";
   },
@@ -96,9 +99,8 @@ const UI = {
     if (addressEl) addressEl.value = localStorage.getItem(CONFIG.STORAGE_KEYS.ADDRESS) || "";
   },
 
-  // 📢 تحديث إعلانات الـ Slider من الـ Admin sheet
+  // 📢 تحديث إعلانات الـ Slider
   updatePromos(settings) {
-    // لو في المستقبل عايز تضيف عروض ديناميكية من الشيت
     const freeDeliveryEl = document.getElementById("promo-free-delivery");
     if (freeDeliveryEl) {
       freeDeliveryEl.textContent = `للطلبات فوق ${CONFIG.FREE_DELIVERY_MIN} جنيه`;
