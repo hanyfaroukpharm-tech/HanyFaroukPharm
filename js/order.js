@@ -94,14 +94,12 @@ const Order = {
   },
 
   // ══════════════════════════════════════
+ // ══════════════════════════════════════
   //  📋 PRESCRIPTION — الروشتة
   // ══════════════════════════════════════
 
   // 📂 فتح مودال الروشتة
   openPrescriptionModal() {
-    this.prescriptionImage = null;
-    document.getElementById("presc-preview-wrap")?.classList.add("hidden");
-    document.getElementById("presc-upload-area")?.classList.remove("hidden");
     document.getElementById("presc-name").value  = localStorage.getItem(CONFIG.STORAGE_KEYS.NAME)  || "";
     document.getElementById("presc-phone").value = localStorage.getItem(CONFIG.STORAGE_KEYS.PHONE) || "";
     document.getElementById("presc-notes").value = "";
@@ -113,54 +111,13 @@ const Order = {
   closePrescriptionModal() {
     document.getElementById("prescriptionModal")?.classList.remove("active");
     document.body.style.overflow = "";
-    this.prescriptionImage = null;
   },
 
-  // 📷 فتح الكاميرا أو اختيار صورة
-  openCamera() {
-    document.getElementById("presc-file-input")?.click();
-  },
-
-  // 🖼️ معالجة الصورة المختارة
-  handleImageSelect(input) {
-    const file = input.files[0];
-    if (!file) return;
-
-    // تحقق من النوع
-    if (!file.type.startsWith("image/")) {
-      alert("برجاء اختيار صورة فقط");
-      return;
-    }
-
-    // تحقق من الحجم (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-      alert("الصورة كبيرة جداً — الحد الأقصى 5MB");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.prescriptionImage = e.target.result; // base64
-
-      // أظهر الـ preview
-      const previewImg  = document.getElementById("presc-preview-img");
-      const previewWrap = document.getElementById("presc-preview-wrap");
-      const uploadArea  = document.getElementById("presc-upload-area");
-
-      if (previewImg)  previewImg.src = this.prescriptionImage;
-      if (previewWrap) previewWrap.classList.remove("hidden");
-      if (uploadArea)  uploadArea.classList.add("hidden");
-    };
-    reader.readAsDataURL(file);
-  },
-
-  // 🔄 إعادة اختيار صورة
-  resetImage() {
-    this.prescriptionImage = null;
-    const input = document.getElementById("presc-file-input");
-    if (input) input.value = "";
-    document.getElementById("presc-preview-wrap")?.classList.add("hidden");
-    document.getElementById("presc-upload-area")?.classList.remove("hidden");
+  // ✅ التحقق من بيانات الروشتة
+  _validatePrescription(name, phone) {
+    if (!name.trim())                              { alert("برجاء إدخال الاسم");            return false; }
+    if (!phone.trim() || phone.trim().length < 10) { alert("برجاء إدخال رقم موبايل صحيح"); return false; }
+    return true;
   },
 
   // 🚀 إرسال الروشتة
@@ -177,13 +134,12 @@ const Order = {
     const now     = new Date();
     const orderID = now.getTime().toString().slice(-6);
 
-    // تسجيل في الشيت
     const orderData = {
       OrderID:           orderID,
       CustomerName:      name,
       Phone:             phone,
       OrderDetails:      notes ? `ملاحظات: ${notes}` : "طلب روشتة طبية",
-      PrescriptionImage: "تم إرسال صورة عبر واتساب",
+      PrescriptionImage: "سيتم إرسال الصورة عبر واتساب",
       Total:             0,
       Status:            "قيد الانتظار",
       Date:              now.toLocaleString("ar-EG"),
@@ -207,22 +163,18 @@ const Order = {
   // 📲 فتح واتساب مع الروشتة
   _openWhatsAppPrescription(name, phone, notes, orderID) {
     const waNumber = window.APP_SETTINGS?.WhatsAppNumber || "";
-    let msg = `*🏥 روشتة طبية — ${CONFIG.PHARMACY_NAME}*\n`;
-    msg += `*رقم الطلب:* #${orderID}\n`;
+    let msg = `🏥 *صيدلية د. هاني فاروق*\n`;
     msg += `━━━━━━━━━━━━━━━━━━\n`;
-    msg += `*👤 العميل:* ${name}\n`;
-    msg += `*📞 الهاتف:* ${phone}\n`;
-    if (notes) msg += `*📝 ملاحظات:* ${notes}\n`;
+    msg += `📋 *طلب روشتة طبية*\n`;
+    msg += `🔖 *رقم الطلب:* #${orderID}\n`;
     msg += `━━━━━━━━━━━━━━━━━━\n`;
-    msg += `*📸 صورة الروشتة مرفقة في هذه المحادثة*`;
+    msg += `👤 *الاسم:* ${name}\n`;
+    msg += `📞 *الهاتف:* ${phone}\n`;
+    if (notes) msg += `📝 *ملاحظات:* ${notes}\n`;
+    msg += `━━━━━━━━━━━━━━━━━━\n`;
+    msg += `📸 *برجاء إرفاق صورة الروشتة مع هذه الرسالة*`;
 
-    // فتح واتساب بالرسالة — العميل يرسل الصورة يدوياً
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, "_blank");
-
-    // تنبيه للعميل
-    setTimeout(() => {
-      alert("✅ تم فتح واتساب!\n\nبعد إرسال الرسالة، برجاء إرفاق صورة الروشتة في نفس المحادثة 📸");
-    }, 1000);
   },
 
   // 📲 فتح واتساب للطلب العادي
