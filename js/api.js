@@ -16,10 +16,21 @@ const API = {
     return this.getSheet(CONFIG.SHEETS.PRODUCTS);
   },
 
+  // ✅ جلب الـ Categories من الشيت
+  async getCategories() {
+    try {
+      const rows = await this.getSheet(CONFIG.SHEETS.CATEGORIES);
+      const names = rows.map(r => r.Name).filter(Boolean);
+      return ["الكل", ...names];
+    } catch (e) {
+      console.warn("Categories sheet not found, using defaults");
+      return CONFIG.DEFAULT_CATEGORIES;
+    }
+  },
+
   // ✅ جلب إعدادات الأدمن (رقم الواتساب، كلمة المرور، حالة الصيدلية)
   async getAdminSettings() {
     const rows = await this.getSheet(CONFIG.SHEETS.ADMIN);
-    // حوّل الـ array إلى object أسهل في الاستخدام
     const settings = {};
     rows.forEach(row => {
       settings[row.SettingName] = row.Value;
@@ -41,7 +52,6 @@ const API = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sheet: CONFIG.SHEETS.ORDERS, ...orderData }),
     });
-    // no-cors مش بيرجع response — الإرسال بيحصل في الخلفية
     return true;
   },
 };
