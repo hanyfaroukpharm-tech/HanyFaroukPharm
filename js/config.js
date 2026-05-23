@@ -4,7 +4,7 @@
 // ============================================================
 
 const CONFIG = {
-  // 🔗 رابط Google Apps Script
+  // 🔗 رابط Google Apps Script — غيره بالرابط الخاص بيك
   API_URL: "https://script.google.com/macros/s/AKfycbw6I4sitywB6Y3-_s8PFG_wolbbd_ysLw8WUdwmuLS26XmyyhUqWOrjKUoOCiJV1hx7/exec",
 
   // 🏥 اسم الصيدلية
@@ -14,18 +14,18 @@ const CONFIG = {
   // 🛒 الحد الأدنى للتوصيل المجاني (بالجنيه)
   FREE_DELIVERY_MIN: 300,
 
-  // 📦 اسم الشيتات — لا تغيرها إلا لو غيرتها في الشيت
+  // 📦 اسم الشيتات في Google Sheet (لا تغيرها إلا لو غيرتها في الشيت)
   SHEETS: {
     PRODUCTS:   "Products",
     ORDERS:     "Orders",
     ADMIN:      "Admin",
-    CATEGORIES: "Categories",   // ← جديد
+    CATEGORIES: "Categories",
   },
 
-  // 🗂️ Categories احتياطية لو الشيت مش شغال
+  // 🗂️ أسماء الكاتيجوري الافتراضية — تظهر لو الشيت مش شغال
   DEFAULT_CATEGORIES: ["الكل", "العروض", "أدوية", "عناية بالبشرة والشعر", "أطفال", "أجهزة طبية"],
 
-  // 💾 مفاتيح Local Storage
+  // 💾 مفاتيح Local Storage لحفظ بيانات العميل
   STORAGE_KEYS: {
     NAME:    "hany_name",
     PHONE:   "hany_phone",
