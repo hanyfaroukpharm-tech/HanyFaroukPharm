@@ -104,6 +104,7 @@
   </div>
 
   <!-- ══════════════════════════════════
+<!-- ══════════════════════════════════
        بانر إرسال الروشتة
   ══════════════════════════════════ -->
   <div class="mx-4 my-4 bg-white p-4 rounded-2xl shadow-sm border border-blue-50 flex items-center justify-between">
@@ -116,11 +117,105 @@
         <p class="text-[10px] text-gray-500">صور الروشتة وهنوصلك فوراً</p>
       </div>
     </div>
-    <button onclick="UI.openCheckout()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">
-      طلب سريع
+    <button onclick="Order.openPrescriptionModal()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">
+      ارسل روشتة
     </button>
   </div>
 
+  <!-- ══════════════════════════════════
+       مودال الروشتة
+  ══════════════════════════════════ -->
+  <div id="prescriptionModal" class="modal">
+    <div class="bg-white w-full rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto modal-sheet">
+
+      <!-- الهيدر -->
+      <div class="flex justify-between items-center p-5 border-b border-gray-100 sticky top-0 bg-white rounded-t-3xl">
+        <h3 class="text-lg font-bold text-gray-800">📋 إرسال روشتة</h3>
+        <button onclick="Order.closePrescriptionModal()" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 pb-16">
+
+        <!-- منطقة رفع الصورة -->
+        <div id="presc-upload-area"
+          onclick="Order.openCamera()"
+          class="border-2 border-dashed border-blue-200 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer bg-blue-50 active:bg-blue-100 transition-colors">
+          <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center text-blue-600">
+            <i class="fas fa-camera text-2xl"></i>
+          </div>
+          <p class="font-bold text-blue-600 text-sm">اضغط لتصوير الروشتة</p>
+          <p class="text-[10px] text-gray-400">أو اختر صورة من الجهاز</p>
+        </div>
+
+        <!-- input الكاميرا (مخفي) -->
+        <input
+          type="file"
+          id="presc-file-input"
+          accept="image/*"
+          capture="environment"
+          class="hidden"
+          onchange="Order.handleImageSelect(this)"
+        >
+
+        <!-- preview الصورة -->
+        <div id="presc-preview-wrap" class="hidden">
+          <div class="relative">
+            <img id="presc-preview-img" src="" alt="الروشتة" class="w-full rounded-2xl object-cover max-h-48">
+            <button
+              onclick="Order.resetImage()"
+              class="absolute top-2 left-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md">
+              <i class="fas fa-times text-xs"></i>
+            </button>
+          </div>
+          <p class="text-center text-xs text-green-600 font-bold mt-2">
+            <i class="fas fa-check-circle ml-1"></i> تم اختيار الصورة بنجاح
+          </p>
+        </div>
+
+        <!-- بيانات العميل -->
+        <div class="space-y-3">
+          <h4 class="font-bold text-gray-700 text-sm">بيانات التواصل</h4>
+          <input
+            type="text"
+            id="presc-name"
+            placeholder="الاسم بالكامل"
+            class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl text-sm font-bold"
+          >
+          <input
+            type="tel"
+            id="presc-phone"
+            placeholder="رقم الموبايل"
+            class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl text-sm"
+          >
+          <textarea
+            id="presc-notes"
+            placeholder="ملاحظات إضافية (اختياري)..."
+            class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl text-sm h-20 resize-none"
+          ></textarea>
+        </div>
+
+        <!-- تنبيه -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 flex gap-2">
+          <i class="fas fa-info-circle text-amber-500 mt-0.5 flex-shrink-0"></i>
+          <p class="text-xs text-amber-700 leading-relaxed">
+            بعد الضغط على إرسال، هيفتح واتساب — برجاء إرفاق صورة الروشتة في المحادثة
+          </p>
+        </div>
+
+        <!-- زرار الإرسال -->
+        <button
+          id="presc-send-btn"
+          onclick="Order.submitPrescription()"
+          class="w-full bg-green-500 text-white py-4 rounded-2xl font-bold shadow-lg text-base active:scale-95 transition-transform"
+        >
+          <i class="fab fa-whatsapp ml-2"></i> إرسال الروشتة
+        </button>
+
+      </div>
+    </div>
+  </div>
   <!-- ══════════════════════════════════
        تبويبات الكاتيجوري
   ══════════════════════════════════ -->
