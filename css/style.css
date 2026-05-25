@@ -1,5 +1,5 @@
 /* ============================================================
-   style.css — المحدث مع تناسق الألوان
+   style.css — المحدث لحل مشكلة تداخل الـ Header
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
@@ -8,14 +8,9 @@
 :root {
   --primary:     #0284c7;
   --primary-dark:#0369a1;
-  --bg:          #0d1f35;        /* ← داكن يتناسق مع الـ Cover */
-  --bg-card:     #132640;        /* ← لون الكروت */
-  --bg-section:  #0a1828;        /* ← أغمق شوية للتباين */
+  --bg:          #f0f7ff;
   --white:       #ffffff;
-  --shadow:      0 4px 20px rgba(2, 132, 199, 0.15);
-  --text-main:   #e2eaf4;        /* ← نص فاتح على الخلفية الداكنة */
-  --text-muted:  #7a9bbf;        /* ← نص ثانوي */
-  --border:      rgba(56,189,248,0.12); /* ← حدود خفيفة */
+  --shadow:      0 4px 20px rgba(2, 132, 199, 0.1);
 }
 
 /* ── الأساسيات ── */
@@ -107,55 +102,20 @@ header .relative.z-10 {
 
 .search-input-field {
   width: 100%;
-  background: rgba(255,255,255,0.15);
-  color: white;
+  background: white;
+  color: #1e293b;
   border-radius: 15px;
   padding: 12px 18px;
   font-size: 15px;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: none;
   outline: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 .close-search-btn {
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(5px);
   transition: all 0.2s;
-}
-
-/* ── تناسق الكروت مع الخلفية الداكنة ── */
-.bg-white {
-  background-color: var(--bg-card) !important;
-}
-
-.bg-gray-50 {
-  background-color: var(--bg-section) !important;
-}
-
-.text-gray-800,
-.text-gray-700 {
-  color: var(--text-main) !important;
-}
-
-.text-gray-500,
-.text-gray-400 {
-  color: var(--text-muted) !important;
-}
-
-.border-gray-100,
-.border-gray-200,
-.border-blue-50 {
-  border-color: var(--border) !important;
-}
-
-/* ── بانر الروشتة ── */
-.border-blue-50 {
-  border-color: var(--border) !important;
-}
-
-/* ── الـ Nav الثابت ── */
-nav.fixed {
-  background-color: #0d1f35 !important;
-  border-color: var(--border) !important;
 }
 
 /* ── إخفاء الـ Scrollbar ── */
@@ -167,16 +127,15 @@ nav.fixed {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.55);
   z-index: 100;
   align-items: flex-end;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(2px);
 }
 .modal.active { display: flex; }
 
 .modal-sheet {
   animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  background-color: #132640 !important;
 }
 @keyframes slideUp {
   from { transform: translateY(100%); opacity: 0; }
@@ -195,13 +154,6 @@ nav.fixed {
   box-shadow: 0 4px 12px rgba(2,132,199,0.35);
 }
 
-/* ── التبويبات الغير نشطة ── */
-.tab-btn:not(.active-tab) {
-  background: var(--bg-card) !important;
-  color: var(--text-muted) !important;
-  border-color: var(--border) !important;
-}
-
 /* ── بطاقة المنتج ── */
 .product-card {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -215,13 +167,13 @@ nav.fixed {
 #cart-badge.scale-125 { transform: scale(1.4); }
 
 /* ── Swiper Pagination ── */
-.swiper-pagination-bullet { background: rgba(255,255,255,0.4) !important; }
+.swiper-pagination-bullet { background: rgba(255,255,255,0.5) !important; }
 .swiper-pagination-bullet-active { background: white !important; }
 
 /* ── Skeleton Animation ── */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
+  50%       { opacity: 0.5; }
 }
 .animate-pulse { animation: pulse 1.5s ease-in-out infinite; }
 
