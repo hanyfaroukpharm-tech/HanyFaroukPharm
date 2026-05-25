@@ -3,332 +3,422 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة الأدمن — صيدلية د. هاني فاروق</title>
+  <title>لوحة التحكم — صيدلية د. هاني فاروق</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Cairo', sans-serif; background: #f0f7ff; }
-    .pharmacy-gradient { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
-    .status-waiting  { background:#fef9c3; color:#854d0e; border:1px solid #fde68a; }
-    .status-progress { background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe; }
-    .status-done     { background:#dcfce7; color:#166534; border:1px solid #bbf7d0; }
-    .status-cancel   { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
-    .card-enter { animation: fadeUp .3s ease both; }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    body { font-family:'Cairo',sans-serif; background:#0d1f35; color:#e2eaf4; }
+    .card { background:#132640; border:1px solid rgba(56,189,248,0.12); border-radius:1.25rem; }
+    .grad { background:linear-gradient(135deg,#0284c7,#0369a1); }
+    .status-waiting  { background:rgba(234,179,8,0.15);  color:#fbbf24; border:1px solid rgba(234,179,8,0.3); }
+    .status-progress { background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); }
+    .status-done     { background:rgba(34,197,94,0.15);  color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
+    .status-cancel   { background:rgba(239,68,68,0.15);  color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+    .filter-btn   { background:#1a3352; color:#7a9bbf; border:1px solid rgba(56,189,248,0.1); transition:all .2s; }
+    .filter-active{ background:linear-gradient(135deg,#0284c7,#0369a1)!important; color:white!important; box-shadow:0 4px 12px rgba(2,132,199,0.4); }
+    .no-scrollbar::-webkit-scrollbar{display:none;}
+    .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
+    .pulse-dot { animation:pulseDot 1.5s infinite; }
+    @keyframes pulseDot { 0%,100%{box-shadow:0 0 0 0 rgba(234,179,8,0.5)} 50%{box-shadow:0 0 0 8px rgba(234,179,8,0)} }
+    .card-enter { animation:fadeUp .3s ease both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    select { background:#1a3352; color:#e2eaf4; border:1px solid rgba(56,189,248,0.2); border-radius:.75rem; padding:8px 12px; font-family:'Cairo',sans-serif; font-size:12px; width:100%; }
   </style>
 </head>
 <body class="min-h-screen">
 
-  <!-- ══ شاشة تسجيل الدخول ══ -->
-  <div id="login-screen" class="min-h-screen flex items-center justify-center p-6">
-    <div class="bg-white w-full max-w-sm rounded-3xl shadow-xl p-8 text-center">
-
-      <div class="pharmacy-gradient w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-        <i class="fas fa-shield-alt text-2xl text-white"></i>
-      </div>
-
-      <h1 class="text-xl font-black text-gray-800 mb-1">لوحة التحكم</h1>
-      <p class="text-sm text-gray-400 mb-6">صيدلية د. هاني فاروق</p>
-
-      <input
-        id="password-input"
-        type="password"
-        placeholder="كلمة المرور"
-        class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 text-center text-lg font-bold tracking-widest focus:outline-none focus:border-blue-400 mb-3"
-        onkeydown="if(event.key==='Enter') login()"
-      >
-      <div id="login-error" class="hidden text-red-500 text-sm font-bold mb-3">
-        ❌ كلمة المرور غلط
-      </div>
-      <button onclick="login()" class="w-full pharmacy-gradient text-white py-3 rounded-2xl font-bold shadow-md active:scale-95 transition-transform">
-        دخول
-      </button>
+<!-- ══ شاشة الدخول ══ -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center p-6">
+  <div class="card w-full max-w-sm p-8 text-center">
+    <div class="grad w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+      <i class="fas fa-shield-alt text-2xl text-white"></i>
     </div>
+    <h1 class="text-xl font-black mb-1">لوحة التحكم</h1>
+    <p class="text-sm mb-6" style="color:#7a9bbf">صيدلية د. هاني فاروق</p>
+    <input id="password-input" type="password" placeholder="كلمة المرور"
+      class="w-full p-3 rounded-2xl text-center text-lg font-bold tracking-widest mb-3 focus:outline-none"
+      style="background:#1a3352;border:1px solid rgba(56,189,248,0.2);color:#e2eaf4"
+      onkeydown="if(event.key==='Enter') login()">
+    <div id="login-error" class="hidden text-red-400 text-sm font-bold mb-3">❌ كلمة المرور غلط</div>
+    <button onclick="login()" class="w-full grad text-white py-3 rounded-2xl font-bold shadow-md active:scale-95 transition-transform">
+      دخول
+    </button>
   </div>
+</div>
 
-  <!-- ══ لوحة الأدمن (مخفية في الأول) ══ -->
-  <div id="admin-panel" class="hidden min-h-screen">
+<!-- ══ لوحة التحكم ══ -->
+<div id="admin-panel" class="hidden min-h-screen">
 
-    <!-- Header -->
-    <header class="pharmacy-gradient text-white p-4 shadow-md sticky top-0 z-50">
-      <div class="flex justify-between items-center max-w-2xl mx-auto">
-        <div class="flex items-center gap-3">
-          <div class="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center">
-            <i class="fas fa-clipboard-list"></i>
-          </div>
-          <div>
-            <h1 class="font-black text-base leading-tight">لوحة الطلبات</h1>
-            <p class="text-[10px] opacity-70">صيدلية د. هاني فاروق</p>
-          </div>
+  <!-- Header -->
+  <header class="sticky top-0 z-50 p-4 shadow-lg" style="background:#0a1828;border-bottom:1px solid rgba(56,189,248,0.1)">
+    <div class="flex justify-between items-center max-w-2xl mx-auto">
+      <div class="flex items-center gap-3">
+        <div class="grad w-10 h-10 rounded-xl flex items-center justify-center shadow">
+          <i class="fas fa-chart-line text-sm text-white"></i>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="loadOrders()" id="refresh-btn"
-            class="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
-            <i class="fas fa-sync-alt"></i>
-          </button>
-          <button onclick="logout()"
-            class="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center active:scale-90 transition-transform">
-            <i class="fas fa-sign-out-alt"></i>
-          </button>
+        <div>
+          <h1 class="font-black text-base leading-tight">لوحة التحكم</h1>
+          <p class="text-[10px]" style="color:#7a9bbf">صيدلية د. هاني فاروق</p>
         </div>
       </div>
-    </header>
-
-    <!-- إحصائيات سريعة -->
-    <div class="p-4 max-w-2xl mx-auto">
-      <div class="grid grid-cols-3 gap-3 mb-4">
-        <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-blue-50">
-          <div id="stat-total" class="text-2xl font-black text-blue-600">—</div>
-          <div class="text-[10px] text-gray-400 font-bold mt-1">إجمالي الطلبات</div>
-        </div>
-        <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-yellow-50">
-          <div id="stat-waiting" class="text-2xl font-black text-yellow-500">—</div>
-          <div class="text-[10px] text-gray-400 font-bold mt-1">قيد الانتظار</div>
-        </div>
-        <div class="bg-white rounded-2xl p-3 text-center shadow-sm border border-green-50">
-          <div id="stat-done" class="text-2xl font-black text-green-500">—</div>
-          <div class="text-[10px] text-gray-400 font-bold mt-1">تم التسليم</div>
-        </div>
-      </div>
-
-      <!-- فلتر الحالة -->
-      <div class="flex gap-2 overflow-x-auto pb-2 mb-4 no-scrollbar">
-        <button onclick="filterOrders('الكل', this)"
-          class="filter-btn active-filter px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all">
-          الكل
+      <div class="flex items-center gap-2">
+        <!-- نقطة الطلبات الجديدة -->
+        <div id="new-dot" class="hidden w-3 h-3 bg-yellow-400 rounded-full pulse-dot"></div>
+        <button onclick="loadOrders()" id="refresh-btn"
+          class="w-10 h-10 rounded-xl flex items-center justify-center"
+          style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2)">
+          <i class="fas fa-sync-alt text-sm" style="color:#38bdf8"></i>
         </button>
-        <button onclick="filterOrders('قيد الانتظار', this)"
-          class="filter-btn bg-white text-gray-500 border border-gray-100 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap">
-          ⏳ قيد الانتظار
-        </button>
-        <button onclick="filterOrders('قيد التنفيذ', this)"
-          class="filter-btn bg-white text-gray-500 border border-gray-100 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap">
-          🔄 قيد التنفيذ
-        </button>
-        <button onclick="filterOrders('تم التسليم', this)"
-          class="filter-btn bg-white text-gray-500 border border-gray-100 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap">
-          ✅ تم التسليم
+        <button onclick="logout()"
+          class="w-10 h-10 rounded-xl flex items-center justify-center"
+          style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2)">
+          <i class="fas fa-sign-out-alt text-sm text-red-400"></i>
         </button>
       </div>
-
-      <!-- قائمة الطلبات -->
-      <div id="orders-list" class="space-y-3">
-        <div class="text-center py-16 text-gray-300">
-          <i class="fas fa-spinner fa-spin text-4xl mb-3 block"></i>
-          <p class="font-bold text-sm">جاري التحميل...</p>
-        </div>
-      </div>
-
-      <!-- آخر تحديث -->
-      <p id="last-update" class="text-center text-[10px] text-gray-300 mt-4 pb-6"></p>
     </div>
+  </header>
+
+  <div class="p-4 max-w-2xl mx-auto space-y-4">
+
+    <!-- إحصائيات -->
+    <div class="grid grid-cols-4 gap-2">
+      <div class="card p-3 text-center">
+        <div id="stat-total" class="text-xl font-black" style="color:#38bdf8">—</div>
+        <div class="text-[9px] mt-1" style="color:#7a9bbf">الكل</div>
+      </div>
+      <div class="card p-3 text-center">
+        <div id="stat-waiting" class="text-xl font-black text-yellow-400">—</div>
+        <div class="text-[9px] mt-1" style="color:#7a9bbf">انتظار</div>
+      </div>
+      <div class="card p-3 text-center">
+        <div id="stat-progress" class="text-xl font-black text-blue-400">—</div>
+        <div class="text-[9px] mt-1" style="color:#7a9bbf">جاري</div>
+      </div>
+      <div class="card p-3 text-center">
+        <div id="stat-done" class="text-xl font-black text-green-400">—</div>
+        <div class="text-[9px] mt-1" style="color:#7a9bbf">تم</div>
+      </div>
+    </div>
+
+    <!-- بحث -->
+    <div class="relative">
+      <input id="search-input" type="text" placeholder="ابحث بالاسم أو التليفون أو رقم الفاتورة..."
+        oninput="applyFilter()"
+        class="w-full p-3 pr-10 rounded-2xl text-sm focus:outline-none"
+        style="background:#132640;border:1px solid rgba(56,189,248,0.15);color:#e2eaf4">
+      <i class="fas fa-search absolute top-3.5 right-3 text-sm" style="color:#7a9bbf"></i>
+    </div>
+
+    <!-- فلتر الحالة -->
+    <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+      <button onclick="setFilter('الكل',this)"      class="filter-btn filter-active px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">الكل</button>
+      <button onclick="setFilter('قيد الانتظار',this)" class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">⏳ انتظار</button>
+      <button onclick="setFilter('قيد التنفيذ',this)"  class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">🔄 جاري</button>
+      <button onclick="setFilter('تم التسليم',this)"   class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">✅ تم</button>
+      <button onclick="setFilter('ملغي',this)"          class="filter-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">❌ ملغي</button>
+    </div>
+
+    <!-- قائمة الطلبات -->
+    <div id="orders-list" class="space-y-3">
+      <div class="text-center py-16" style="color:#7a9bbf">
+        <i class="fas fa-spinner fa-spin text-4xl mb-3 block"></i>
+        <p class="font-bold text-sm">جاري التحميل...</p>
+      </div>
+    </div>
+
+    <p id="last-update" class="text-center text-[10px] pb-6" style="color:#7a9bbf"></p>
   </div>
+</div>
 
-  <style>
-    .no-scrollbar::-webkit-scrollbar { display:none; }
-    .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
-    .active-filter { background:linear-gradient(135deg,#0284c7,#0369a1)!important; color:white!important; box-shadow:0 4px 12px rgba(2,132,199,0.3); }
-  </style>
+<script src="js/config.js"></script>
+<script>
+  let allOrders     = [];
+  let currentFilter = "الكل";
+  let lastOrderIDs  = new Set();
+  let isFirstLoad   = true;
 
-  <script src="js/config.js"></script>
-  <script>
-    let allOrders = [];
-    let adminPassword = "";
+  // 🔔 صوت إشعار
+  function playBeep() {
+    try {
+      const ctx  = new (window.AudioContext || window.webkitAudioContext)();
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      osc.type = "sine";
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.6);
+    } catch(e) {}
+  }
 
-    // ── تسجيل الدخول ──
-    async function login() {
-      const input = document.getElementById("password-input").value.trim();
-      const errEl = document.getElementById("login-error");
+  // ⏱️ وقت نسبي
+  function timeAgo(dateStr) {
+    if (!dateStr) return "";
+    try {
+      const parts = dateStr.match(/(\d+)\/(\d+)\/(\d+),?\s+(\d+):(\d+):(\d+)/);
+      if (!parts) return dateStr;
+      const d    = new Date(parts[3], parts[2]-1, parts[1], parts[4], parts[5], parts[6]);
+      const diff = Math.floor((Date.now() - d) / 60000);
+      if (diff < 1)    return "الآن";
+      if (diff < 60)   return `منذ ${diff} دقيقة`;
+      if (diff < 1440) return `منذ ${Math.floor(diff/60)} ساعة`;
+      return `منذ ${Math.floor(diff/1440)} يوم`;
+    } catch { return dateStr; }
+  }
 
-      if (!input) return;
-
-      try {
-        // جلب كلمة المرور من الشيت
-        const res = await fetch(`${CONFIG.API_URL}?sheet=Admin`);
-        const rows = await res.json();
-        const saved = rows.find(r => r.SettingName === "AdminPassword")?.Value;
-        adminPassword = saved || "123456";
-
-        if (input === String(adminPassword)) {
-          sessionStorage.setItem("admin_auth", "true");
-          document.getElementById("login-screen").classList.add("hidden");
-          document.getElementById("admin-panel").classList.remove("hidden");
-          loadOrders();
-        } else {
-          errEl.classList.remove("hidden");
-          document.getElementById("password-input").value = "";
-          setTimeout(() => errEl.classList.add("hidden"), 2500);
-        }
-      } catch (e) {
-        // لو فشل تحميل الشيت استخدم الكلمة الافتراضية
-        if (input === "123456") {
-          document.getElementById("login-screen").classList.add("hidden");
-          document.getElementById("admin-panel").classList.remove("hidden");
-          loadOrders();
-        } else {
-          errEl.classList.remove("hidden");
-          setTimeout(() => errEl.classList.add("hidden"), 2500);
-        }
-      }
-    }
-
-    // ── تسجيل الخروج ──
-    function logout() {
-      sessionStorage.removeItem("admin_auth");
-      document.getElementById("admin-panel").classList.add("hidden");
-      document.getElementById("login-screen").classList.remove("hidden");
-      document.getElementById("password-input").value = "";
-    }
-
-    // ── تحميل الطلبات ──
-    async function loadOrders() {
-      const btn = document.getElementById("refresh-btn");
-      btn.querySelector("i").classList.add("fa-spin");
-
-      try {
-        const res = await fetch(`${CONFIG.API_URL}?sheet=Orders`);
-        allOrders = await res.json();
-        // عكس الترتيب — الأحدث أولاً
-        allOrders = allOrders.reverse();
-        updateStats();
-        renderOrders(allOrders);
-        document.getElementById("last-update").textContent =
-          `آخر تحديث: ${new Date().toLocaleTimeString("ar-EG")}`;
-      } catch (e) {
-        document.getElementById("orders-list").innerHTML = `
-          <div class="text-center py-16 text-gray-300">
-            <i class="fas fa-wifi text-4xl mb-3 block"></i>
-            <p class="font-bold text-sm">فشل تحميل الطلبات</p>
-            <button onclick="loadOrders()" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">إعادة المحاولة</button>
-          </div>`;
-      } finally {
-        btn.querySelector("i").classList.remove("fa-spin");
-      }
-    }
-
-    // ── إحصائيات ──
-    function updateStats() {
-      document.getElementById("stat-total").textContent   = allOrders.length;
-      document.getElementById("stat-waiting").textContent = allOrders.filter(o => o.Status === "قيد الانتظار").length;
-      document.getElementById("stat-done").textContent    = allOrders.filter(o => o.Status === "تم التسليم").length;
-    }
-
-    // ── فلترة ──
-    function filterOrders(status, btn) {
-      document.querySelectorAll(".filter-btn").forEach(b => {
-        b.classList.remove("active-filter");
-        b.classList.add("bg-white", "text-gray-500", "border", "border-gray-100");
-      });
-      btn.classList.add("active-filter");
-      btn.classList.remove("bg-white", "text-gray-500", "border", "border-gray-100");
-
-      const filtered = status === "الكل" ? allOrders : allOrders.filter(o => o.Status === status);
-      renderOrders(filtered);
-    }
-
-    // ── رسم الطلبات ──
-    function renderOrders(list) {
-      const container = document.getElementById("orders-list");
-
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-16 text-gray-300">
-            <i class="fas fa-box-open text-4xl mb-3 block"></i>
-            <p class="font-bold text-sm">مفيش طلبات</p>
-          </div>`;
-        return;
-      }
-
-      container.innerHTML = list.map((order, i) => {
-        const statusClass = {
-          "قيد الانتظار": "status-waiting",
-          "قيد التنفيذ":  "status-progress",
-          "تم التسليم":   "status-done",
-          "ملغي":         "status-cancel",
-        }[order.Status] || "status-waiting";
-
-        // استخرج الموقع لو موجود
-        const locationMatch = order.OrderDetails?.match(/https:\/\/www\.google\.com\/maps[^\s]*/);
-        const locationUrl   = locationMatch ? locationMatch[0] : null;
-        const detailsClean  = order.OrderDetails?.replace(/الموقع:?\s*https?:\/\/\S+/g, "").trim();
-
-        return `
-        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden card-enter" style="animation-delay:${i * 0.05}s">
-
-          <!-- هيدر الكارت -->
-          <div class="flex justify-between items-center p-4 pb-3 border-b border-gray-50">
-            <div class="flex items-center gap-2">
-              <div class="bg-blue-50 w-9 h-9 rounded-xl flex items-center justify-center text-blue-600 font-black text-sm">
-                #${order.OrderID || "—"}
-              </div>
-              <div>
-                <p class="font-black text-gray-800 text-sm">${order.CustomerName || "—"}</p>
-                <p class="text-[11px] text-gray-400">${order.Date || ""}</p>
-              </div>
-            </div>
-            <span class="text-xs font-bold px-3 py-1 rounded-full ${statusClass}">${order.Status || "قيد الانتظار"}</span>
-          </div>
-
-          <!-- تفاصيل -->
-          <div class="p-4 space-y-2">
-
-            <!-- الهاتف -->
-            <div class="flex items-center gap-2">
-              <i class="fas fa-phone text-blue-400 text-xs w-4"></i>
-              <a href="tel:${order.Phone}" class="text-sm text-blue-600 font-bold">${order.Phone || "—"}</a>
-            </div>
-
-            <!-- الأصناف -->
-            <div class="flex gap-2">
-              <i class="fas fa-shopping-bag text-blue-400 text-xs w-4 mt-1"></i>
-              <p class="text-xs text-gray-600 leading-relaxed flex-1 whitespace-pre-line">${detailsClean || "—"}</p>
-            </div>
-
-            <!-- الإجمالي -->
-            ${order.Total ? `
-            <div class="flex items-center gap-2">
-              <i class="fas fa-coins text-yellow-400 text-xs w-4"></i>
-              <span class="text-sm font-black text-gray-800">${order.Total} ج.م</span>
-            </div>` : ""}
-
-          </div>
-
-          <!-- أزرار التواصل -->
-          <div class="flex gap-2 px-4 pb-4">
-            <a href="https://wa.me/${order.Phone?.replace(/[^0-9]/g,"")}"
-              target="_blank"
-              class="flex-1 bg-green-500 text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform shadow-sm">
-              <i class="fab fa-whatsapp text-sm"></i> واتساب
-            </a>
-            <a href="tel:${order.Phone}"
-              class="flex-1 bg-blue-50 text-blue-600 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform border border-blue-100">
-              <i class="fas fa-phone text-sm"></i> اتصال
-            </a>
-            ${locationUrl ? `
-            <a href="${locationUrl}" target="_blank"
-              class="flex-1 bg-orange-50 text-orange-500 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform border border-orange-100">
-              <i class="fas fa-map-marker-alt text-sm"></i> موقع
-            </a>` : ""}
-          </div>
-
-        </div>`;
-      }).join("");
-    }
-
-    // ── تحقق من الجلسة عند فتح الصفحة ──
-    window.onload = () => {
-      if (sessionStorage.getItem("admin_auth") === "true") {
+  // 🔐 تسجيل الدخول
+  async function login() {
+    const input = document.getElementById("password-input").value.trim();
+    const errEl = document.getElementById("login-error");
+    if (!input) return;
+    try {
+      const res  = await fetch(`${CONFIG.API_URL}?sheet=Admin`);
+      const rows = await res.json();
+      const saved = rows.find(r => r.SettingName === "AdminPassword")?.Value || "123456";
+      if (input === String(saved)) {
+        sessionStorage.setItem("admin_auth","true");
         document.getElementById("login-screen").classList.add("hidden");
         document.getElementById("admin-panel").classList.remove("hidden");
         loadOrders();
+      } else {
+        errEl.classList.remove("hidden");
+        document.getElementById("password-input").value = "";
+        setTimeout(() => errEl.classList.add("hidden"), 2500);
       }
-    };
+    } catch {
+      if (input === "123456") {
+        sessionStorage.setItem("admin_auth","true");
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("admin-panel").classList.remove("hidden");
+        loadOrders();
+      } else {
+        errEl.classList.remove("hidden");
+        setTimeout(() => errEl.classList.add("hidden"), 2500);
+      }
+    }
+  }
 
-    // ── تحديث تلقائي كل 60 ثانية ──
-    setInterval(() => {
-      if (sessionStorage.getItem("admin_auth") === "true") loadOrders();
-    }, 60000);
-  </script>
+  // 🚪 تسجيل الخروج
+  function logout() {
+    sessionStorage.removeItem("admin_auth");
+    document.getElementById("admin-panel").classList.add("hidden");
+    document.getElementById("login-screen").classList.remove("hidden");
+    document.getElementById("password-input").value = "";
+  }
+
+  // 📦 تحميل الطلبات
+  async function loadOrders() {
+    const btn = document.getElementById("refresh-btn");
+    btn.querySelector("i").classList.add("fa-spin");
+    try {
+      const res    = await fetch(`${CONFIG.API_URL}?sheet=Orders`);
+      const data   = await res.json();
+      const orders = data.filter(o => o.OrderID).reverse();
+
+      // كشف الجديد
+      if (!isFirstLoad) {
+        const newOnes = orders.filter(o => !lastOrderIDs.has(String(o.OrderID)));
+        if (newOnes.length > 0) {
+          playBeep();
+          const dot = document.getElementById("new-dot");
+          dot.classList.remove("hidden");
+          setTimeout(() => dot.classList.add("hidden"), 15000);
+        }
+      }
+
+      lastOrderIDs = new Set(orders.map(o => String(o.OrderID)));
+      allOrders    = orders;
+      isFirstLoad  = false;
+
+      updateStats();
+      applyFilter();
+      document.getElementById("last-update").textContent =
+        `آخر تحديث: ${new Date().toLocaleTimeString("ar-EG")}`;
+    } catch {
+      document.getElementById("orders-list").innerHTML = `
+        <div class="text-center py-16" style="color:#7a9bbf">
+          <i class="fas fa-wifi text-4xl mb-3 block opacity-30"></i>
+          <p class="font-bold text-sm">فشل تحميل الطلبات</p>
+          <button onclick="loadOrders()" class="mt-3 grad text-white px-4 py-2 rounded-xl text-xs font-bold">إعادة المحاولة</button>
+        </div>`;
+    } finally {
+      btn.querySelector("i").classList.remove("fa-spin");
+    }
+  }
+
+  // 📊 إحصائيات
+  function updateStats() {
+    document.getElementById("stat-total").textContent    = allOrders.length;
+    document.getElementById("stat-waiting").textContent  = allOrders.filter(o => o.Status === "قيد الانتظار").length;
+    document.getElementById("stat-progress").textContent = allOrders.filter(o => o.Status === "قيد التنفيذ").length;
+    document.getElementById("stat-done").textContent     = allOrders.filter(o => o.Status === "تم التسليم").length;
+  }
+
+  // 🗂️ فلتر
+  function setFilter(status, btn) {
+    currentFilter = status;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("filter-active"));
+    btn.classList.add("filter-active");
+    applyFilter();
+  }
+
+  // 🔍 تطبيق الفلتر + البحث
+  function applyFilter() {
+    const q = document.getElementById("search-input")?.value.trim().toLowerCase() || "";
+    const filtered = allOrders.filter(o =>
+      (currentFilter === "الكل" || o.Status === currentFilter) &&
+      (!q ||
+        o.CustomerName?.toLowerCase().includes(q) ||
+        String(o.Phone).includes(q) ||
+        String(o.OrderID).includes(q))
+    );
+    renderOrders(filtered);
+  }
+
+  // 🔄 تحديث حالة الأوردر
+  async function updateStatus(orderID, newStatus) {
+    try {
+      await fetch(CONFIG.API_URL, {
+        method:"POST", mode:"no-cors", cache:"no-cache",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ action:"updateStatus", sheet:"Orders", OrderID: orderID, Status: newStatus })
+      });
+      const order = allOrders.find(o => String(o.OrderID) === String(orderID));
+      if (order) order.Status = newStatus;
+      updateStats();
+      applyFilter();
+    } catch { alert("فشل تحديث الحالة"); }
+  }
+
+  // 📲 رسالة واتساب تأكيد مفصلة
+  function confirmOrder(order) {
+    const phone      = String(order.Phone || "").replace(/[^0-9]/g,"");
+    const details    = (order.OrderDetails || "").replace(/الموقع:?\s*https?:\/\/\S+/g,"").trim();
+    let msg  = `🏥 *صيدلية د. هاني فاروق*\n`;
+    msg += `━━━━━━━━━━━━━━━━━━\n`;
+    msg += `✅ *تأكيد طلبك رقم #${order.OrderID}*\n`;
+    msg += `━━━━━━━━━━━━━━━━━━\n`;
+    msg += `👤 *الاسم:* ${order.CustomerName || "—"}\n`;
+    msg += `📅 *التاريخ:* ${order.Date || "—"}\n`;
+    msg += `━━━━━━━━━━━━━━━━━━\n`;
+    msg += `🛒 *الأصناف:*\n${details || "—"}\n`;
+    msg += `━━━━━━━━━━━━━━━━━━\n`;
+    msg += `💰 *الإجمالي: ${order.Total || 0} ج.م*\n`;
+    msg += `📦 *الحالة: ${order.Status || "قيد الانتظار"}*\n`;
+    msg += `━━━━━━━━━━━━━━━━━━\n`;
+    msg += `شكراً لتعاملك معنا! 🙏`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
+  }
+
+  // 🎨 رسم الطلبات
+  function renderOrders(list) {
+    const container = document.getElementById("orders-list");
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-16" style="color:#7a9bbf">
+          <i class="fas fa-box-open text-4xl mb-3 block opacity-30"></i>
+          <p class="font-bold text-sm">مفيش طلبات</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = list.map((order, i) => {
+      const statusClass = {
+        "قيد الانتظار":"status-waiting",
+        "قيد التنفيذ" :"status-progress",
+        "تم التسليم"  :"status-done",
+        "ملغي"        :"status-cancel",
+      }[order.Status] || "status-waiting";
+
+      const locMatch     = order.OrderDetails?.match(/https:\/\/www\.google\.com\/maps[^\s]*/);
+      const locationUrl  = locMatch ? locMatch[0] : null;
+      const detailsClean = (order.OrderDetails || "").replace(/الموقع:?\s*https?:\/\/\S+/g,"").trim();
+      const phone        = String(order.Phone || "").replace(/[^0-9]/g,"");
+      const orderJson    = JSON.stringify(order).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+
+      return `
+      <div class="card card-enter" style="animation-delay:${i*0.04}s">
+
+        <!-- هيدر -->
+        <div class="flex justify-between items-center p-4 pb-3" style="border-bottom:1px solid rgba(56,189,248,0.08)">
+          <div class="flex items-center gap-2">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black text-xs"
+              style="background:rgba(56,189,248,0.1);color:#38bdf8">#${order.OrderID || "—"}</div>
+            <div>
+              <p class="font-black text-sm">${order.CustomerName || "—"}</p>
+              <p class="text-[10px]" style="color:#7a9bbf">${timeAgo(order.Date)}</p>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold px-3 py-1 rounded-full ${statusClass}">${order.Status || "قيد الانتظار"}</span>
+        </div>
+
+        <!-- تفاصيل -->
+        <div class="p-4 space-y-2">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-phone text-xs w-4" style="color:#38bdf8"></i>
+            <a href="tel:${order.Phone}" class="text-sm font-bold" style="color:#60a5fa">${order.Phone || "—"}</a>
+          </div>
+          <div class="flex gap-2">
+            <i class="fas fa-shopping-bag text-xs w-4 mt-0.5" style="color:#38bdf8"></i>
+            <p class="text-xs leading-relaxed flex-1 whitespace-pre-line" style="color:#a0bcda">${detailsClean || "—"}</p>
+          </div>
+          ${order.Total ? `
+          <div class="flex items-center gap-2">
+            <i class="fas fa-coins text-xs w-4 text-yellow-400"></i>
+            <span class="text-sm font-black text-yellow-400">${order.Total} ج.م</span>
+          </div>` : ""}
+        </div>
+
+        <!-- تحديث الحالة -->
+        <div class="px-4 pb-3">
+          <select onchange="updateStatus('${order.OrderID}', this.value)">
+            <option value="قيد الانتظار" ${order.Status==="قيد الانتظار"?"selected":""}>⏳ قيد الانتظار</option>
+            <option value="قيد التنفيذ"  ${order.Status==="قيد التنفيذ" ?"selected":""}>🔄 قيد التنفيذ</option>
+            <option value="تم التسليم"   ${order.Status==="تم التسليم"  ?"selected":""}>✅ تم التسليم</option>
+            <option value="ملغي"          ${order.Status==="ملغي"        ?"selected":""}>❌ ملغي</option>
+          </select>
+        </div>
+
+        <!-- أزرار -->
+        <div class="flex gap-2 px-4 pb-4">
+          <button onclick='confirmOrder(${JSON.stringify(order)})'
+            class="flex-1 bg-green-500 text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform">
+            <i class="fab fa-whatsapp text-sm"></i> تأكيد الطلب
+          </button>
+          <a href="tel:${order.Phone}"
+            class="flex-1 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+            style="background:rgba(56,189,248,0.1);color:#38bdf8;border:1px solid rgba(56,189,248,0.2)">
+            <i class="fas fa-phone text-sm"></i> اتصال
+          </a>
+          ${locationUrl ? `
+          <a href="${locationUrl}" target="_blank"
+            class="flex-1 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+            style="background:rgba(251,146,60,0.1);color:#fb923c;border:1px solid rgba(251,146,60,0.2)">
+            <i class="fas fa-map-marker-alt text-sm"></i> موقع
+          </a>` : ""}
+        </div>
+
+      </div>`;
+    }).join("");
+  }
+
+  // ── تحقق من الجلسة ──
+  window.onload = () => {
+    if (sessionStorage.getItem("admin_auth") === "true") {
+      document.getElementById("login-screen").classList.add("hidden");
+      document.getElementById("admin-panel").classList.remove("hidden");
+      loadOrders();
+    }
+  };
+
+  // ── تحديث تلقائي كل 30 ثانية ──
+  setInterval(() => {
+    if (sessionStorage.getItem("admin_auth") === "true") loadOrders();
+  }, 30000);
+</script>
 </body>
 </html>
