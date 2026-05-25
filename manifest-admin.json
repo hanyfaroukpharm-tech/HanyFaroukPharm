@@ -1,0 +1,28 @@
+{
+  "name": "لوحة تحكم — صيدلية هاني فاروق",
+  "short_name": "إدارة الصيدلية",
+  "description": "لوحة تحكم الطلبات",
+  "start_url": "/admin.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1828",
+  "theme_color": "#0a1828",
+  "lang": "ar",
+  "dir": "rtl",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "images/adminlogo.avif",
+      "sizes": "192x192",
+      "type": "image/avif",
+      "purpose": "any"
+    },
+    {
+      "src": "images/adminlogo.avif",
+      "sizes": "512x512",
+      "type": "image/avif",
+      "purpose": "maskable"
+    }
+  ]
+}
