@@ -3,7 +3,7 @@
   "short_name": "إدارة الصيدلية",
   "description": "لوحة تحكم الطلبات",
   "start_url": "/admin.html",
-  "scope": "/",
+  "scope": "/admin.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a1828",
