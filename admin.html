@@ -39,6 +39,35 @@
 
 <audio id="notification-sound" src="images/notification.mp3" preload="auto"></audio>
 
+<!-- ══ بانر تثبيت PWA — Android ══ -->
+<div id="pwa-banner" style="display:none;position:fixed;bottom:16px;left:12px;right:12px;z-index:9999;background:linear-gradient(135deg,#0284c7,#0369a1);border-radius:20px;padding:16px 18px;box-shadow:0 8px 32px rgba(2,132,199,0.5);font-family:'Cairo',sans-serif;animation:slideUpPwa .4s cubic-bezier(.34,1.56,.64,1);">
+  <style>@keyframes slideUpPwa{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}</style>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <img src="images/admin_192.png" style="width:48px;height:48px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;">
+    <div style="flex:1;">
+      <p style="color:white;font-weight:900;font-size:14px;margin:0 0 2px;">ثبّت لوحة التحكم</p>
+      <p style="color:rgba(255,255,255,0.75);font-size:11px;margin:0;">وصول سريع بدون متصفح</p>
+    </div>
+    <button onclick="closePwaBanner()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;flex-shrink:0;">✕</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:12px;">
+    <button id="pwa-install-btn" onclick="installAdminPwa()" style="flex:1;background:white;color:#0284c7;border:none;border-radius:12px;padding:10px;font-family:'Cairo',sans-serif;font-weight:900;font-size:13px;cursor:pointer;">📲 تثبيت لوحة التحكم</button>
+    <button onclick="closePwaBanner()" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:12px;padding:10px 16px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;">لاحقاً</button>
+  </div>
+</div>
+
+<!-- ══ بانر تثبيت PWA — iOS ══ -->
+<div id="ios-banner" style="display:none;position:fixed;bottom:16px;left:12px;right:12px;z-index:9999;background:linear-gradient(135deg,#0284c7,#0369a1);border-radius:20px;padding:16px 18px;box-shadow:0 8px 32px rgba(2,132,199,0.5);font-family:'Cairo',sans-serif;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <img src="images/admin_192.png" style="width:48px;height:48px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;">
+    <div style="flex:1;">
+      <p style="color:white;font-weight:900;font-size:14px;margin:0 0 4px;">ثبّت لوحة التحكم على iPhone</p>
+      <p style="color:rgba(255,255,255,0.8);font-size:11px;margin:0;">اضغط <strong>⎙ مشاركة</strong> ثم <strong>"Add to Home Screen"</strong></p>
+    </div>
+    <button onclick="document.getElementById('ios-banner').style.display='none'" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;">✕</button>
+  </div>
+</div>
+
 <div id="login-screen" class="min-h-screen flex items-center justify-center p-6">
   <div class="card w-full max-w-sm p-8 text-center">
     <div class="grad w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden border-2 border-white/10">
@@ -147,6 +176,41 @@
         .then(reg => console.log('Admin SW Registered'))
         .catch(err => console.log('SW Registration Failed', err));
     });
+  }
+
+  // ✅ PWA بانر التثبيت
+  let deferredPrompt = null;
+  const isIos        = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!isStandalone && !localStorage.getItem('admin_pwa_installed'))
+      setTimeout(() => document.getElementById('pwa-banner').style.display = 'block', 2000);
+  });
+
+  if (isIos && !isStandalone && !localStorage.getItem('admin_pwa_installed'))
+    setTimeout(() => document.getElementById('ios-banner').style.display = 'block', 2000);
+
+  window.addEventListener('appinstalled', () => {
+    localStorage.setItem('admin_pwa_installed', '1');
+    document.getElementById('pwa-banner').style.display = 'none';
+    document.getElementById('ios-banner').style.display = 'none';
+  });
+
+  async function installAdminPwa() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('pwa-banner').style.display = 'none';
+    if (outcome === 'accepted') localStorage.setItem('admin_pwa_installed', '1');
+  }
+
+  function closePwaBanner() {
+    // لاحقاً — البانر هيرجع في المرة الجاية لو مش متنصب
+    document.getElementById('pwa-banner').style.display = 'none';
   }
 
   // 🔔 تشغيل صوت التنبيه الجديد MP3
