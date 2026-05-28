@@ -456,7 +456,70 @@
   </div>
 </div>
 
-<script src="js/pwa.js" defer></script>
+<script>  
+  // ── متغير لحفظ حدث التثبيت ──  
+  let deferredPrompt = null;  
+  
+  // ── اكتشف النوع ──  
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);  
+  const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches  
+    || window.navigator.standalone === true;  
+  
+  // ── تسجيل Service Worker ──  
+  if ('serviceWorker' in navigator) {  
+    navigator.serviceWorker.register('/sw.js').catch(console.warn);  
+  }  
+  
+  // ── استقبال حدث التثبيت (Android / Chrome) ──  
+  window.addEventListener('beforeinstallprompt', e => {  
+    e.preventDefault();  
+    deferredPrompt = e;  
+  
+    // أظهر البانر بعد ثانيتين لو التطبيق مش متنصب  
+    if (!isInStandaloneMode && !sessionStorage.getItem('pwa_dismissed')) {  
+      setTimeout(() => {  
+        document.getElementById('pwa-banner').style.display = 'block';  
+      }, 2000);  
+    }  
+  });  
+  
+  // ── iOS ──  
+  if (isIos && !isInStandaloneMode && !sessionStorage.getItem('pwa_dismissed')) {  
+    setTimeout(() => {  
+      document.getElementById('ios-banner').style.display = 'block';  
+    }, 2000);  
+  }  
+  
+  // ── تثبيت ──  
+  async function installPwa() {  
+    if (!deferredPrompt) return;  
+    deferredPrompt.prompt();  
+    const { outcome } = await deferredPrompt.userChoice;  
+    deferredPrompt = null;  
+    document.getElementById('pwa-banner').style.display = 'none';  
+    if (outcome === 'accepted') {  
+      sessionStorage.setItem('pwa_dismissed', 'true');  
+    }  
+  }  
+  
+  // ── إغلاق البانر ──  
+  function closePwaBanner() {  
+    document.getElementById('pwa-banner').style.display = 'none';  
+    // يعيد الظهور في كل زيارة جديدة (مش بنحفظ في localStorage)  
+    sessionStorage.setItem('pwa_dismissed', 'true');  
+  }  
+  
+  function closeIosBanner() {  
+    document.getElementById('ios-banner').style.display = 'none';  
+    sessionStorage.setItem('pwa_dismissed', 'true');  
+  }  
+  
+  // ── لو اتنصب، اخفي البانر تلقائياً ──  
+  window.addEventListener('appinstalled', () => {  
+    document.getElementById('pwa-banner').style.display = 'none';  
+    document.getElementById('ios-banner').style.display = 'none';  
+  });  
+</script>  
 
 </body>
 </html>
