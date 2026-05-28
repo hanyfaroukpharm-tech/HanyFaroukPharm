@@ -1,6 +1,7 @@
 let deferredPrompt = null;
 
 const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
 const isInStandaloneMode =
   window.matchMedia('(display-mode: standalone)').matches ||
   window.navigator.standalone === true;
@@ -30,9 +31,11 @@ async function installPwa() {
   if (!deferredPrompt) return;
 
   deferredPrompt.prompt();
+
   const { outcome } = await deferredPrompt.userChoice;
 
   deferredPrompt = null;
+
   document.getElementById('pwa-banner').style.display = 'none';
 
   if (outcome === 'accepted') {
@@ -54,3 +57,7 @@ window.addEventListener('appinstalled', () => {
   document.getElementById('pwa-banner').style.display = 'none';
   document.getElementById('ios-banner').style.display = 'none';
 });
+
+window.installPwa = installPwa;
+window.closePwaBanner = closePwaBanner;
+window.closeIosBanner = closeIosBanner;
