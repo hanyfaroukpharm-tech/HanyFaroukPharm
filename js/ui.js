@@ -16,22 +16,17 @@ const UI = {
     });
   },
 
-  // 🛍️ تحميل منتجات العروض في الـ Slider
+ // 🛍️ تحميل منتجات العروض في الـ Slider
   async loadPromoSlider() {
     const wrapper = document.getElementById("swiper-wrapper");
     if (!wrapper) return;
 
     try {
-      // جلب منتجات قسم العروض من الشيت
       const all    = await API.getProducts();
       const promos = all.filter(p => p.Category === "العروض");
 
-      if (promos.length === 0) {
-        // لو مفيش عروض — اتركه ثابت
-        return;
-      }
+      if (promos.length === 0) return;
 
-      // الألوان المتناوبة للكروت
       const colors = [
         "from-blue-600 to-blue-800",
         "from-emerald-500 to-teal-700",
@@ -40,46 +35,39 @@ const UI = {
         "from-orange-500 to-amber-700",
       ];
 
-      // ابنِ الـ slides
       wrapper.innerHTML = promos.map((item, i) => {
-        const color   = colors[i % colors.length];
-        const imgSrc  = item.Image
+        const color  = colors[i % colors.length];
+        const imgSrc = item.Image
           ? (item.Image.startsWith("http") ? item.Image : `images/products/${item.Image}`)
           : "";
 
         return `
         <div class="swiper-slide">
-          <div class="bg-gradient-to-br ${color} h-36 flex items-center overflow-hidden relative">
+          <div class="h-36 flex items-center overflow-hidden relative rounded-2xl">
 
-            <!-- الصورة لو موجودة -->
+            <!-- الصورة كخلفية كاملة بدون ظل -->
             ${imgSrc ? `
             <div class="absolute inset-0">
               <img src="${imgSrc}"
-                class="w-full h-full object-cover opacity-25"
-                onerror="this.style.display='none'">
-            </div>` : ""}
+                class="w-full h-full object-cover"
+                onerror="this.parentElement.parentElement.classList.add('bg-gradient-to-br', '${color}')">
+            </div>` : `<div class="absolute inset-0 bg-gradient-to-br ${color}"></div>`}
 
-            <!-- النص -->
-            <div class="relative z-10 p-5 flex-1">
+            <!-- طبقة تعتيم خفيفة على اليمين فقط علشان النص يقرأ -->
+            <div class="absolute inset-0" style="background:linear-gradient(to left, rgba(0,0,0,0.65) 40%, transparent 100%);"></div>
+
+            <!-- النص على اليمين -->
+            <div class="relative z-10 p-4 mr-auto text-right">
               <span class="text-xs bg-white/20 rounded-full px-3 py-1 inline-block mb-2">🏷️ عرض خاص</span>
-              <h4 class="text-lg font-black text-white leading-tight">${item.Name}</h4>
-              ${item.Description ? `<p class="text-xs text-white/80 mt-1">${item.Description}</p>` : ""}
-              <p class="text-white font-black text-base mt-2">${item.Price} ج.م</p>
+              <h4 class="text-base font-black text-white leading-tight">${item.Name}</h4>
+              ${item.Description ? `<p class="text-xs text-white/80 mt-1 line-clamp-2">${item.Description}</p>` : ""}
+              <p class="text-yellow-300 font-black text-lg mt-1">${item.Price} ج.م</p>
             </div>
-
-            <!-- الصورة على اليسار لو موجودة -->
-            ${imgSrc ? `
-            <div class="relative z-10 w-28 h-28 ml-4 flex-shrink-0">
-              <img src="${imgSrc}"
-                class="w-full h-full object-contain drop-shadow-lg"
-                onerror="this.style.display='none'">
-            </div>` : ""}
 
           </div>
         </div>`;
       }).join("");
 
-      // إعادة تهيئة الـ Swiper بعد تحميل الـ slides
       if (window.swiperInstance) window.swiperInstance.destroy(true, true);
       window.swiperInstance = new Swiper(".mySwiper", {
         slidesPerView: 1,
@@ -90,7 +78,6 @@ const UI = {
       });
 
     } catch (e) {
-      // لو فشل التحميل — الـ slides الثابتة تفضل كما هي
       console.warn("فشل تحميل عروض الـ Slider", e);
       this.initSlider();
     }
