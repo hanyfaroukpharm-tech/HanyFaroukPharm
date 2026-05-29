@@ -6,8 +6,7 @@ window.APP_SETTINGS = {};
 
 async function initApp() {
   // 1️⃣ تهيئة الـ UI
-  UI.initSlider();
-  await UI.initTabs();   // ← await علشان تنتظر الشيت
+  await UI.initTabs();
   UI.initSearch();
   UI.fillSavedCustomerData();
 
@@ -20,13 +19,13 @@ async function initApp() {
     window.APP_SETTINGS = settings;
     UI.updateWhatsappBtn(settings.WhatsAppNumber);
     UI.updatePharmacyStatus(settings.PharmacyStatus);
-    // UI.updatePromos حُذفت — الـ Slider ثابت في الـ HTML
   } catch (e) {
     console.warn("تعذّر تحميل إعدادات الأدمن", e);
   }
 
-  // 4️⃣ تحميل المنتجات
+  // 4️⃣ تحميل المنتجات + الـ Slider من العروض
   await Products.load();
+  await UI.loadPromoSlider(); // ← جديد: يحمل العروض في الـ Slider
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
