@@ -113,6 +113,19 @@
         </button>
       </div>
     </div>
+    <!-- تبويبات الأقسام -->
+    <div class="flex gap-2 mt-3 max-w-2xl mx-auto">
+      <button onclick="showTab('orders')" id="tab-orders"
+        class="flex-1 py-2 rounded-xl text-xs font-bold transition-all"
+        style="background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.3)">
+        <i class="fas fa-clipboard-list ml-1"></i> الطلبات
+      </button>
+      <button onclick="showTab('products')" id="tab-products"
+        class="flex-1 py-2 rounded-xl text-xs font-bold transition-all"
+        style="background:#1a3352;color:#7a9bbf;border:1px solid rgba(56,189,248,0.1)">
+        <i class="fas fa-box ml-1"></i> إدارة المنتجات
+      </button>
+    </div>
   </header>
 
   <div class="p-4 max-w-2xl mx-auto space-y-4">
@@ -159,6 +172,90 @@
     </div>
 
     <p id="last-update" class="text-center text-[10px] pb-6" style="color:#7a9bbf"></p>
+  </div>
+
+  <!-- ══ قسم إدارة المنتجات (مخفي في الأول) ══ -->
+  <div id="products-section" class="hidden p-4 max-w-2xl mx-auto space-y-4 pb-10">
+
+    <!-- شاشة التحقق من كلمة السر -->
+    <div id="products-lock" class="card p-6 text-center">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3" style="background:rgba(56,189,248,0.1)">
+        <i class="fas fa-lock text-xl" style="color:#38bdf8"></i>
+      </div>
+      <p class="font-black text-base mb-1">إدارة المنتجات</p>
+      <p class="text-xs mb-4" style="color:#7a9bbf">أدخل كلمة سر المنتجات</p>
+      <input id="products-pass" type="password" placeholder="كلمة السر"
+        class="w-full p-3 rounded-2xl text-center font-bold mb-3 focus:outline-none"
+        style="background:#1a3352;border:1px solid rgba(56,189,248,0.2);color:#e2eaf4"
+        onkeydown="if(event.key==='Enter') unlockProducts()">
+      <div id="products-pass-error" class="hidden text-red-400 text-xs font-bold mb-3">❌ كلمة السر غلط</div>
+      <button onclick="unlockProducts()" class="w-full grad text-white py-3 rounded-2xl font-bold">دخول</button>
+    </div>
+
+    <!-- لوحة إدارة المنتجات (مخفية لحد ما يدخل السر) -->
+    <div id="products-manager" class="hidden space-y-4">
+
+      <!-- زرار إضافة منتج جديد -->
+      <button onclick="toggleAddForm()" class="w-full grad text-white py-3 rounded-2xl font-bold flex items-center justify-center gap-2">
+        <i class="fas fa-plus"></i> إضافة منتج جديد
+      </button>
+
+      <!-- فورم الإضافة -->
+      <div id="add-product-form" class="hidden card p-5 space-y-3">
+        <h3 class="font-black text-base" style="color:#38bdf8">➕ منتج جديد</h3>
+
+        <input id="new-name" type="text" placeholder="اسم المنتج *"
+          class="w-full p-3 rounded-xl text-sm focus:outline-none"
+          style="background:#1a3352;border:1px solid rgba(56,189,248,0.2);color:#e2eaf4">
+
+        <select id="new-category" style="background:#1a3352;color:#e2eaf4;border:1px solid rgba(56,189,248,0.2);border-radius:.75rem;padding:12px;font-family:Cairo,sans-serif;font-size:13px;width:100%;">
+          <option value="">اختر الكاتيجوري *</option>
+        </select>
+
+        <input id="new-price" type="number" placeholder="السعر *"
+          class="w-full p-3 rounded-xl text-sm focus:outline-none"
+          style="background:#1a3352;border:1px solid rgba(56,189,248,0.2);color:#e2eaf4">
+
+        <input id="new-image" type="url" placeholder="رابط الصورة (اختياري)"
+          class="w-full p-3 rounded-xl text-sm focus:outline-none"
+          style="background:#1a3352;border:1px solid rgba(56,189,248,0.2);color:#e2eaf4">
+
+        <textarea id="new-desc" placeholder="وصف المنتج (اختياري)"
+          class="w-full p-3 rounded-xl text-sm resize-none h-20 focus:outline-none"
+          style="background:#1a3352;border:1px solid rgba(56,189,248,0.2);color:#e2eaf4"></textarea>
+
+        <input id="new-stock" type="number" placeholder="الكمية المتاحة (افتراضي: 1000)"
+          class="w-full p-3 rounded-xl text-sm focus:outline-none"
+          style="background:#1a3352;border:1px solid rgba(56,189,248,0.2);color:#e2eaf4">
+
+        <div id="add-product-msg" class="hidden text-center text-sm font-bold py-2 rounded-xl"></div>
+
+        <div class="flex gap-2">
+          <button onclick="addProduct()"
+            class="flex-1 grad text-white py-3 rounded-xl font-bold text-sm">
+            <i class="fas fa-save ml-1"></i> حفظ المنتج
+          </button>
+          <button onclick="toggleAddForm()"
+            class="px-4 py-3 rounded-xl font-bold text-sm"
+            style="background:#1a3352;color:#7a9bbf;border:1px solid rgba(56,189,248,0.1)">
+            إلغاء
+          </button>
+        </div>
+      </div>
+
+      <!-- قائمة المنتجات الحالية -->
+      <div>
+        <div class="flex justify-between items-center mb-3">
+          <p class="font-black text-sm" style="color:#38bdf8">المنتجات الحالية</p>
+          <button onclick="loadProductsList()" class="text-xs px-3 py-1.5 rounded-lg" style="background:rgba(56,189,248,0.1);color:#38bdf8">
+            <i class="fas fa-sync-alt ml-1"></i> تحديث
+          </button>
+        </div>
+        <div id="products-list-admin" class="space-y-2">
+          <p class="text-center text-xs py-4" style="color:#7a9bbf">اضغط تحديث لعرض المنتجات</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -493,6 +590,183 @@
   setInterval(() => {
     if (sessionStorage.getItem("admin_auth") === "true") loadOrders();
   }, 30000);
+
+  // ══════════════════════════════════════
+  //  إدارة المنتجات
+  // ══════════════════════════════════════
+
+  let productsUnlocked = false;
+
+  // 🗂️ التبديل بين التبويبات
+  function showTab(tab) {
+    const ordersSection  = document.querySelector(".p-4.max-w-2xl.mx-auto.space-y-4");
+    const productsSection = document.getElementById("products-section");
+    const tabOrders   = document.getElementById("tab-orders");
+    const tabProducts = document.getElementById("tab-products");
+
+    if (tab === "orders") {
+      ordersSection.classList.remove("hidden");
+      productsSection.classList.add("hidden");
+      tabOrders.style.cssText   = "flex:1;padding:8px;border-radius:.75rem;font-size:12px;font-weight:700;background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);";
+      tabProducts.style.cssText = "flex:1;padding:8px;border-radius:.75rem;font-size:12px;font-weight:700;background:#1a3352;color:#7a9bbf;border:1px solid rgba(56,189,248,0.1);";
+    } else {
+      ordersSection.classList.add("hidden");
+      productsSection.classList.remove("hidden");
+      tabProducts.style.cssText = "flex:1;padding:8px;border-radius:.75rem;font-size:12px;font-weight:700;background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);";
+      tabOrders.style.cssText   = "flex:1;padding:8px;border-radius:.75rem;font-size:12px;font-weight:700;background:#1a3352;color:#7a9bbf;border:1px solid rgba(56,189,248,0.1);";
+      if (!productsUnlocked) {
+        document.getElementById("products-lock").classList.remove("hidden");
+        document.getElementById("products-manager").classList.add("hidden");
+      }
+    }
+  }
+
+  // 🔐 فتح قسم المنتجات بكلمة سر
+  async function unlockProducts() {
+    const input = document.getElementById("products-pass").value.trim();
+    const errEl = document.getElementById("products-pass-error");
+    if (!input) return;
+    try {
+      const res  = await fetch(`${CONFIG.API_URL}?sheet=Admin`);
+      const rows = await res.json();
+      const saved = rows.find(r => r.SettingName === "ProductsPassword")?.Value || "654321";
+      if (input === String(saved)) {
+        productsUnlocked = true;
+        document.getElementById("products-lock").classList.add("hidden");
+        document.getElementById("products-manager").classList.remove("hidden");
+        loadCategories();
+        loadProductsList();
+      } else {
+        errEl.classList.remove("hidden");
+        document.getElementById("products-pass").value = "";
+        setTimeout(() => errEl.classList.add("hidden"), 2500);
+      }
+    } catch {
+      if (input === "654321") {
+        productsUnlocked = true;
+        document.getElementById("products-lock").classList.add("hidden");
+        document.getElementById("products-manager").classList.remove("hidden");
+        loadCategories();
+        loadProductsList();
+      } else {
+        errEl.classList.remove("hidden");
+        setTimeout(() => errEl.classList.add("hidden"), 2500);
+      }
+    }
+  }
+
+  // 📂 تحميل الكاتيجوريز في الـ select
+  async function loadCategories() {
+    try {
+      const res  = await fetch(`${CONFIG.API_URL}?sheet=Categories`);
+      const data = await res.json();
+      const sel  = document.getElementById("new-category");
+      sel.innerHTML = '<option value="">اختر الكاتيجوري *</option>';
+      data.forEach(c => {
+        if (c.Name) sel.innerHTML += `<option value="${c.Name}">${c.Name}</option>`;
+      });
+    } catch {}
+  }
+
+  // 📦 تحميل قائمة المنتجات
+  async function loadProductsList() {
+    const container = document.getElementById("products-list-admin");
+    container.innerHTML = `<p class="text-center text-xs py-4" style="color:#7a9bbf"><i class="fas fa-spinner fa-spin ml-1"></i> جاري التحميل...</p>`;
+    try {
+      const res  = await fetch(`${CONFIG.API_URL}?sheet=Products`);
+      const data = await res.json();
+      if (data.length === 0) {
+        container.innerHTML = `<p class="text-center text-xs py-4" style="color:#7a9bbf">مفيش منتجات</p>`;
+        return;
+      }
+      container.innerHTML = data.map(p => `
+        <div class="card p-3 flex items-center gap-3">
+          ${p.Image ? `<img src="${p.Image.startsWith("http") ? p.Image : "images/products/"+p.Image}"
+            class="w-12 h-12 rounded-xl object-contain flex-shrink-0"
+            style="background:#1a3352"
+            onerror="this.style.display='none'">` :
+            `<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#1a3352">
+              <i class="fas fa-pills text-sm" style="color:#38bdf8"></i>
+            </div>`}
+          <div class="flex-1 min-w-0">
+            <p class="font-black text-sm truncate">${p.Name || "—"}</p>
+            <p class="text-[10px]" style="color:#7a9bbf">${p.Category || ""} · ${p.Price || 0} ج.م</p>
+          </div>
+          <span class="text-[9px] px-2 py-1 rounded-full font-bold flex-shrink-0 ${Number(p.Stock) > 0 ? "text-green-400" : "text-red-400"}"
+            style="background:${Number(p.Stock) > 0 ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)"}">
+            ${Number(p.Stock) > 0 ? "متاح" : "نفذ"}
+          </span>
+        </div>`).join("");
+    } catch {
+      container.innerHTML = `<p class="text-center text-xs py-4 text-red-400">فشل التحميل</p>`;
+    }
+  }
+
+  // ➕ إضافة منتج جديد
+  async function addProduct() {
+    const name     = document.getElementById("new-name").value.trim();
+    const category = document.getElementById("new-category").value;
+    const price    = document.getElementById("new-price").value.trim();
+    const image    = document.getElementById("new-image").value.trim();
+    const desc     = document.getElementById("new-desc").value.trim();
+    const stock    = document.getElementById("new-stock").value.trim() || "1000";
+    const msgEl    = document.getElementById("add-product-msg");
+
+    if (!name || !category || !price) {
+      msgEl.textContent = "⚠️ الاسم والكاتيجوري والسعر مطلوبين";
+      msgEl.style.cssText = "display:block;background:rgba(239,68,68,0.15);color:#f87171;";
+      return;
+    }
+
+    // آخر ID + 1
+    const nextID = Date.now().toString().slice(-4);
+
+    const productData = {
+      sheet:       "Products",
+      ID:          nextID,
+      Name:        name,
+      Category:    category,
+      Price:       Number(price),
+      Description: desc,
+      Image:       image,
+      Stock:       Number(stock),
+    };
+
+    msgEl.textContent = "جاري الحفظ...";
+    msgEl.style.cssText = "display:block;background:rgba(56,189,248,0.1);color:#38bdf8;";
+
+    try {
+      await fetch(CONFIG.API_URL, {
+        method: "POST", mode: "no-cors", cache: "no-cache",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(productData),
+      });
+
+      msgEl.textContent = "✅ تم حفظ المنتج بنجاح!";
+      msgEl.style.cssText = "display:block;background:rgba(34,197,94,0.15);color:#4ade80;";
+
+      // تنظيف الفورم
+      ["new-name","new-price","new-image","new-desc","new-stock"].forEach(id => {
+        document.getElementById(id).value = "";
+      });
+      document.getElementById("new-category").selectedIndex = 0;
+
+      setTimeout(() => {
+        msgEl.style.display = "none";
+        loadProductsList();
+      }, 2000);
+
+    } catch {
+      msgEl.textContent = "❌ فشل الحفظ، حاول مجدداً";
+      msgEl.style.cssText = "display:block;background:rgba(239,68,68,0.15);color:#f87171;";
+    }
+  }
+
+  // 🔄 إظهار/إخفاء فورم الإضافة
+  function toggleAddForm() {
+    const form = document.getElementById("add-product-form");
+    form.classList.toggle("hidden");
+  }
 </script>
 </body>
 </html>
