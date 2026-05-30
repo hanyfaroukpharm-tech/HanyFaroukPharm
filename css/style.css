@@ -16,6 +16,11 @@
 /* ── الأساسيات ── */
 * { box-sizing: border-box; }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 body {
   font-family: 'Cairo', sans-serif;
   background-color: var(--bg);
