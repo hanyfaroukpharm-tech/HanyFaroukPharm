@@ -1,18 +1,22 @@
-
 // ============================================================
-//  cart.js — منطق السلة الكاملة
+//  cart.js — النسخة المعدلة لتنظيم رسالة الواتساب ودعم الأقسام
 // ============================================================
 
 const Cart = {
-  items: [], // [{ id, name, price, qty }]
+  items: [], // [{ id, name, price, category, qty }]
 
-  // ➕ إضافة منتج أو زيادة الكمية لو موجود
+  // ➕ إضافة منتج أو زيادة الكمية (تم إضافة دعم القسم هنا)
   add(product) {
     const existing = this.items.find(i => i.id === product.id);
     if (existing) {
       existing.qty += 1;
     } else {
-      this.items.push({ ...product, qty: 1 });
+      // نضمن تخزين القسم (Category) إذا كان موجوداً، وإلا نضع "عام"
+      this.items.push({ 
+        ...product, 
+        category: product.category || "عام", 
+        qty: 1 
+      });
     }
     this._save();
     this.updateUI();
@@ -57,31 +61,39 @@ const Cart = {
     return this.items.reduce((sum, i) => sum + i.qty, 0);
   },
 
-  // 📝 تجهيز تفاصيل الطلب كنص
+  // 📝 تجهيز تفاصيل الطلب بنص منظم جداً للواتساب
   getSummaryText() {
-    return this.items
-      .map((item, i) => `${i + 1}- ${item.name} × ${item.qty} = ${item.price * item.qty} ج.م`)
-      .join("\n");
+    if (this.items.length === 0) return "السلة فارغة";
+
+    let text = "📦 *طلب جديد من التطبيق* \n";
+    text += "--------------------------\n";
+
+    this.items.forEach((item, i) => {
+      text += `*${i + 1}-* ${item.name}\n`;
+      text += `🏷️ القسم: _${item.category}_\n`;
+      text += `🔢 الكمية: ${item.qty} × ${item.price} ج.م\n`;
+      text += `💰 السعر: *${item.price * item.qty} ج.م*\n`;
+      text += "--------------------------\n";
+    });
+
+    text += `\n💵 *الإجمالي النهائي: ${this.getTotal()} ج.م*`;
+    return text;
   },
 
-  // 🔄 تحديث كل عناصر الـ UI
+  // 🔄 تحديث كل عناصر الـ UI (تم الحفاظ على كل الـ IDs الأصلية)
   updateUI() {
     const count = this.getCount();
     const total = this.getTotal();
 
-    // Badge العداد
     const badge = document.getElementById("cart-badge");
     if (badge) badge.textContent = count;
 
-    // الإجمالي في الـ Nav
     const navTotal = document.getElementById("cart-total-nav");
     if (navTotal) navTotal.textContent = `${total} ج.م`;
 
-    // الإجمالي في المودال
     const modalTotal = document.getElementById("cart-total-display");
     if (modalTotal) modalTotal.textContent = `${total} ج.م`;
 
-    // قائمة المنتجات في المودال
     this._renderCartItems();
   },
 
@@ -97,11 +109,14 @@ const Cart = {
 
     container.innerHTML = this.items.map(item => `
       <div class="flex items-center justify-between bg-gray-50 rounded-xl p-3 gap-2">
-        <span class="text-sm font-bold text-gray-700 flex-1">${item.name}</span>
+        <div class="flex flex-col flex-1">
+          <span class="text-sm font-bold text-gray-700">${item.name}</span>
+          <span class="text-[10px] text-gray-400">${item.category}</span>
+        </div>
         <div class="flex items-center gap-2">
           <button onclick="Cart.decrease('${item.id}')" class="w-7 h-7 bg-white border border-gray-200 rounded-full text-gray-600 font-bold flex items-center justify-center text-sm shadow-sm">−</button>
           <span class="text-sm font-bold w-5 text-center">${item.qty}</span>
-          <button onclick="Cart.add({id:'${item.id}', name:'${item.name}', price:${item.price}})" class="w-7 h-7 bg-blue-600 rounded-full text-white font-bold flex items-center justify-center text-sm shadow-sm">+</button>
+          <button onclick="Cart.add({id:'${item.id}', name:'${item.name}', price:${item.price}, category:'${item.category}'})" class="w-7 h-7 bg-blue-600 rounded-full text-white font-bold flex items-center justify-center text-sm shadow-sm">+</button>
         </div>
         <span class="text-blue-600 font-bold text-sm w-20 text-left">${item.price * item.qty} ج.م</span>
         <button onclick="Cart.remove('${item.id}')" class="text-red-400 text-xs hover:text-red-600">🗑</button>
