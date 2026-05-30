@@ -2,6 +2,10 @@
    style.css — المحدث لحل مشكلة تداخل الـ Header
    ============================================================ */
 
+/* ── منع الـ Layout Shift ── */
+#products-list { min-height: 400px; }
+nav.fixed { will-change: transform; }
+
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
 
 /* ── متغيرات الألوان ── */
