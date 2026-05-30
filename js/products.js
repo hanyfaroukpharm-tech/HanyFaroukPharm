@@ -69,20 +69,27 @@ const Products = {
     `).join("");
   },
 
-  // ➕ إضافة للسلة من بطاقة المنتج
-  addToCart(id, name, price, stock, btn) {
-    if (stock == 0) return;
-    Cart.add({ id: String(id), name, price: Number(price) });
+  // ➕ إضافة للسلة من بطاقة المنتج (نسخة معدلة لدعم الأقسام)
+addToCart(id, name, price, stock, btn, category) {
+  if (stock == 0) return;
 
-    if (btn) {
-      btn.innerHTML = `<i class="fas fa-check text-xs"></i>`;
-      btn.classList.replace("bg-blue-600", "bg-green-500");
-      setTimeout(() => {
-        btn.innerHTML = `<i class="fas fa-plus text-xs"></i>`;
-        btn.classList.replace("bg-green-500", "bg-blue-600");
-      }, 700);
-    }
-  },
+  // تمرير القسم مع البيانات للسلة
+  Cart.add({ 
+    id: String(id), 
+    name: name, 
+    price: Number(price), 
+    category: category || "عام" // إذا لم يوجد قسم يكتب "عام"
+  });
+
+  if (btn) {
+    btn.innerHTML = `<i class="fas fa-check text-xs"></i>`;
+    btn.classList.replace("bg-blue-600", "bg-green-500");
+    setTimeout(() => {
+      btn.innerHTML = `<i class="fas fa-plus text-xs"></i>`;
+      btn.classList.replace("bg-green-500", "bg-blue-600");
+    }, 700);
+  }
+},
 
   // 🔍 بحث في المنتجات
   search(query) {
