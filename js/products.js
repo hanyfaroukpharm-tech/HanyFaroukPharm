@@ -57,13 +57,14 @@ const Products = {
 
         <div class="flex justify-between items-center w-full mt-auto pt-2 border-t border-gray-50">
           <p class="text-blue-600 font-bold text-sm">${item.Price} ج.م</p>
-          <button
-            onclick="Products.addToCart('${item.ID}', '${item.Name}', ${item.Price}, ${item.Stock}, this)"
-            class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform ${item.Stock == 0 ? 'opacity-40 cursor-not-allowed' : ''}"
-            ${item.Stock == 0 ? "disabled" : ""}
-          >
-            <i class="fas fa-plus text-xs"></i>
-          </button>
+          <button 
+  onclick="Products.addToCart('${item.ID}', '${item.Name}', ${item.Price}, ${item.Stock}, this, '${item.Category}')"
+  class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform ${item.Stock == 0 ? 'opacity-40 cursor-not-allowed' : ''}"
+  ${item.Stock == 0 ? "disabled" : ""}
+>
+  <i class="fas fa-plus text-xs"></i>
+</button>
+
         </div>
       </div>
     `).join("");
