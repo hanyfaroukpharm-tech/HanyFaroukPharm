@@ -9,6 +9,10 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0284c7">
 
+  <!-- Preload الصور الرئيسية لتسريع LCP -->
+  <link rel="preload" href="images/cover.avif" as="image">
+  <link rel="preload" href="images/logo.avif" as="image">
+
   <!-- Preconnect لتسريع الاتصال -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,9 +37,9 @@
   <!-- ملف الـ Styles الخاص بينا -->
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Critical CSS — بيخلي الصفحة تظهر فوراً -->
+  <!-- Critical CSS — بيخلي الصفحة تظهر فوراً بالألوان الأصلية -->
   <style>
-    body { font-family: 'Cairo', Arial, sans-serif; background: #0d1f35; margin: 0; padding-bottom: 6rem; }
+    body { font-family: 'Cairo', Arial, sans-serif; background: #f0f7ff; margin: 0; padding-bottom: 6rem; }
     header { min-height: 110px; background: linear-gradient(135deg, #0284c7, #0369a1); }
   </style>
 </head>
