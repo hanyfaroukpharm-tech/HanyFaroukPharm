@@ -47,50 +47,47 @@ const Products = {
         <img
           src="${this._getImageSrc(item.Image)}"
           alt="${item.Name}"
-          class="w-full h-24 object-contain mb-2 mt-2 rounded-lg"
+          class="w-full h-40 object-contain mb-2 mt-2 rounded-lg"
+          loading="lazy"
           onerror="this.src='images/products/default.avif'"
         >
 
-        <h3 class="font-bold text-xs text-gray-800 text-center w-full leading-tight mb-1 line-clamp-2">${item.Name}</h3>
+        <h3 class="font-bold text-sm text-gray-800 text-center w-full leading-tight mb-1 line-clamp-2">${item.Name}</h3>
 
-        ${item.Description ? `<p class="text-[10px] text-gray-400 text-center w-full truncate mb-1">${item.Description}</p>` : ""}
+        ${item.Description ? `<p class="text-[11px] text-gray-400 text-center w-full truncate mb-1">${item.Description}</p>` : ""}
 
         <div class="flex justify-between items-center w-full mt-auto pt-2 border-t border-gray-50">
-          <p class="text-blue-600 font-bold text-sm">${item.Price} ج.م</p>
-          <button 
-  onclick="Products.addToCart('${item.ID}', '${item.Name}', ${item.Price}, ${item.Stock}, this, '${item.Category}')"
-  class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform ${item.Stock == 0 ? 'opacity-40 cursor-not-allowed' : ''}"
-  ${item.Stock == 0 ? "disabled" : ""}
->
-  <i class="fas fa-plus text-xs"></i>
-</button>
-
+          <p class="text-blue-600 font-bold text-base">${item.Price} ج.م</p>
+          <button
+            onclick="Products.addToCart('${item.ID}', '${item.Name}', ${item.Price}, ${item.Stock}, this, '${item.Category}')"
+            class="bg-blue-600 text-white w-9 h-9 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform ${item.Stock == 0 ? 'opacity-40 cursor-not-allowed' : ''}"
+            ${item.Stock == 0 ? "disabled" : ""}
+          >
+            <i class="fas fa-plus text-sm"></i>
+          </button>
         </div>
       </div>
     `).join("");
   },
 
-  // ➕ إضافة للسلة من بطاقة المنتج (نسخة معدلة لدعم الأقسام)
-addToCart(id, name, price, stock, btn, category) {
-  if (stock == 0) return;
-
-  // تمرير القسم مع البيانات للسلة
-  Cart.add({ 
-    id: String(id), 
-    name: name, 
-    price: Number(price), 
-    category: category || "عام" // إذا لم يوجد قسم يكتب "عام"
-  });
-
-  if (btn) {
-    btn.innerHTML = `<i class="fas fa-check text-xs"></i>`;
-    btn.classList.replace("bg-blue-600", "bg-green-500");
-    setTimeout(() => {
-      btn.innerHTML = `<i class="fas fa-plus text-xs"></i>`;
-      btn.classList.replace("bg-green-500", "bg-blue-600");
-    }, 700);
-  }
-},
+  // ➕ إضافة للسلة
+  addToCart(id, name, price, stock, btn, category) {
+    if (stock == 0) return;
+    Cart.add({
+      id: String(id),
+      name: name,
+      price: Number(price),
+      category: category || "عام"
+    });
+    if (btn) {
+      btn.innerHTML = `<i class="fas fa-check text-xs"></i>`;
+      btn.classList.replace("bg-blue-600", "bg-green-500");
+      setTimeout(() => {
+        btn.innerHTML = `<i class="fas fa-plus text-xs"></i>`;
+        btn.classList.replace("bg-green-500", "bg-blue-600");
+      }, 700);
+    }
+  },
 
   // 🔍 بحث في المنتجات
   search(query) {
@@ -123,15 +120,15 @@ addToCart(id, name, price, stock, btn, category) {
     if (!container) return;
     const skeletonCard = `
       <div class="bg-white p-3 rounded-2xl border border-gray-100 animate-pulse">
-        <div class="w-full h-24 bg-gray-200 rounded-lg mb-3"></div>
+        <div class="w-full h-40 bg-gray-200 rounded-lg mb-3"></div>
         <div class="h-3 bg-gray-200 rounded w-3/4 mx-auto mb-2"></div>
         <div class="h-3 bg-gray-200 rounded w-1/2 mx-auto mb-3"></div>
         <div class="flex justify-between items-center pt-2 border-t border-gray-50">
           <div class="h-4 bg-gray-200 rounded w-12"></div>
-          <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+          <div class="w-9 h-9 bg-gray-200 rounded-full"></div>
         </div>
       </div>`;
-    container.innerHTML = skeletonCard.repeat(6);
+    container.innerHTML = skeletonCard.repeat(4);
   },
 
   // ❌ رسالة خطأ
