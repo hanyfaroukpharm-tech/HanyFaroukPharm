@@ -26,6 +26,7 @@ async function initApp() {
   // 4️⃣ تحميل المنتجات + الـ Slider من العروض
   await Products.load();
   await UI.loadPromoSlider(); // ← جديد: يحمل العروض في الـ Slider
+  await UI.initCategoryCards(); // ← جديد
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
