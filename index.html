@@ -2,136 +2,137 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>صيدلية د. هاني فاروق</title>
+  <meta name="description" content="اطلب أدويتك ومستحضراتك الطبية عبر تطبيق صيدليات د. هاني فاروق. خدمة توصيل للمنازل ومتابعة مباشرة للطلب.">
 
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0284c7">
 
-  <!-- Preload الصور الرئيسية لتسريع LCP -->
-  <link rel="preload" href="images/cover.avif" as="image">
+  <link rel="preload" href="images/cover.avif" as="image" fetchpriority="high">
   <link rel="preload" href="images/logo.avif" as="image">
 
-  <!-- Preconnect لتسريع الاتصال -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Icons — async -->
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"></noscript>
 
-  <!-- Swiper — async -->
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
 
-  <!-- Google Fonts — async -->
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"></noscript>
 
-  <!-- ملف الـ Styles الخاص بينا -->
   <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="css/style.css"></noscript>
+  <noscript><link rel="stylesheet" href="css/style.css"></noscript>
 
-  <!-- Critical CSS — بيخلي الصفحة تظهر فوراً بالألوان الأصلية -->
   <style>
     body { font-family: 'Cairo', Arial, sans-serif; background: #f0f7ff; margin: 0; padding-bottom: 6rem; }
     header { min-height: 110px; background: linear-gradient(135deg, #0284c7, #0369a1); }
   </style>
 </head>
-  <!-- ══════════════════════════════════
-       الـ HEADER
-  ══════════════════════════════════ -->
-<header class="pharmacy-header sticky top-0 z-50 shadow-lg rounded-b-[2rem] overflow-hidden">
-  
-  <div class="header-cover-container">
-    <img 
-      src="images/cover.avif" 
-      class="header-cover-img" 
-      alt="غلاف الصيدلية" 
-      onerror="this.parentElement.style.display='none'"
-    >
-    <div class="header-overlay"></div> 
-  </div>
+<body>
 
-  <div class="relative z-30 h-full p-15 flex flex-col justify-end">
-    
-    <div class="flex items-center justify-start gap-3">
-      <span id="pharmacy-status" class="status-badge">مفتوح الآن</span>
-      
-      <button id="search-btn" class="search-trigger-btn" aria-label="بحث">
-        <i class="fas fa-search"></i>
+  <header class="pharmacy-header sticky top-0 z-50 shadow-lg rounded-b-[2rem] overflow-hidden">
+    <div class="header-cover-container">
+      <img 
+        src="images/cover.avif" 
+        class="header-cover-img" 
+        alt="غلاف صيدليات د. هاني فاروق" 
+        fetchpriority="high"
+        onerror="this.parentElement.style.display='none'"
+      >
+      <div class="header-overlay"></div> 
+    </div>
+
+    <div class="relative z-30 h-full p-15 flex flex-col justify-end">
+      <div class="flex items-center justify-start gap-3">
+        <span id="pharmacy-status" class="status-badge">مفتوح الآن</span>
+        <button id="search-btn" class="search-trigger-btn" aria-label="بحث في المنتجات">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+
+      <div id="search-bar" class="hidden mt-3 animate-fade-in"> 
+        <div class="flex items-center gap-2">
+          <input
+            id="search-input"
+            type="text"
+            placeholder="ابحث عن دواء أو منتج..."
+            class="search-input-field"
+          >
+          <button id="close-search" class="close-search-btn bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-white" aria-label="إغلاق البحث">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="mt-4 px-4">
+      <div class="swiper mySwiper rounded-2xl overflow-hidden shadow-md">
+        <div class="swiper-wrapper" id="swiper-wrapper">
+          </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+
+    <div class="mx-4 my-4 bg-white p-4 rounded-2xl shadow-sm border border-blue-50 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-blue-50 w-11 h-11 rounded-full flex items-center justify-center text-blue-600">
+          <i class="fas fa-file-medical text-lg"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-sm text-gray-800">ارسل روشتة</h4>
+          <p class="text-[10px] text-gray-500">صور الروشتة وهنوصلك فوراً</p>
+        </div>
+      </div>
+      <button onclick="Order.openPrescriptionModal()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">
+        ارسل روشتة
       </button>
     </div>
 
-    <div id="search-bar" class="hidden mt-3 animate-fade-in"> 
-      <div class="flex items-center gap-2">
-        <input
-          id="search-input"
-          type="text"
-          placeholder="ابحث عن دواء أو منتج..."
-          class="search-input-field"
-        >
-        <button id="close-search" class="close-search-btn bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-white">
-          <i class="fas fa-times"></i>
+    <div id="home-view">
+      <div class="px-4 mt-2 mb-4">
+        <h2 class="font-black text-gray-700 text-base mb-3">تسوق حسب القسم</h2>
+        <div id="categories-grid" class="grid grid-cols-2 gap-3">
+          </div>
+      </div>
+    </div>
+
+    <div id="category-view" class="hidden">
+      <div class="flex items-center gap-3 px-4 py-3 sticky top-0 z-40 bg-white/95 backdrop-blur shadow-sm">
+        <button onclick="UI.showHome()" aria-label="العودة للرئيسية"
+          class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center active:scale-90 transition-transform">
+          <i class="fas fa-arrow-right text-gray-600 text-sm"></i>
         </button>
+        <h2 id="category-title" class="font-black text-gray-800 text-base flex-1"></h2>
       </div>
-    </div>
-  </div>
-</header>
 
-  <!-- ══════════════════════════════════
-       الـ SLIDER (العروض)
-  ══════════════════════════════════ -->
-  <div class="mt-4 px-4">
-    <div class="swiper mySwiper rounded-2xl overflow-hidden shadow-md">
-      <div class="swiper-wrapper" id="swiper-wrapper">
-        <!-- يتملى تلقائياً من منتجات قسم العروض في الشيت -->
-      </div>
-      <div class="swiper-pagination"></div>
-    </div>
-  </div>
+      <div id="tabs-container" class="flex gap-2 px-4 overflow-x-auto py-3 no-scrollbar">
+        </div>
 
-  <!-- <!-- ══════════════════════════════════
-       بانر إرسال الروشتة
-  ══════════════════════════════════ -->
-  <div class="mx-4 my-4 bg-white p-4 rounded-2xl shadow-sm border border-blue-50 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="bg-blue-50 w-11 h-11 rounded-full flex items-center justify-center text-blue-600">
-        <i class="fas fa-file-medical text-lg"></i>
-      </div>
-      <div>
-        <h4 class="font-bold text-sm text-gray-800">ارسل روشتة</h4>
-        <p class="text-[10px] text-gray-500">صور الروشتة وهنوصلك فوراً</p>
-      </div>
+      <div class="px-4 grid grid-cols-2 gap-4" id="products-list">
+        </div>
     </div>
-    <button onclick="Order.openPrescriptionModal()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">
-      ارسل روشتة
-    </button>
-  </div>
+  </main>
 
-  <!-- ══════════════════════════════════
-       مودال الروشتة
-  ══════════════════════════════════ -->
   <div id="prescriptionModal" class="modal">
     <div class="bg-white w-full rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto modal-sheet">
-
-      <!-- الهيدر -->
       <div class="flex justify-between items-center p-5 border-b border-gray-100 sticky top-0 bg-white rounded-t-3xl">
         <h3 class="text-lg font-bold text-gray-800">📋 إرسال روشتة</h3>
-        <button onclick="Order.closePrescriptionModal()" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
+        <button onclick="Order.closePrescriptionModal()" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-500" aria-label="إغلاق">
           <i class="fas fa-times"></i>
         </button>
       </div>
 
       <div class="p-5 space-y-4 pb-16">
-
-        <!-- تعليمات الإرسال -->
         <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-5 space-y-3">
           <p class="font-black text-blue-700 text-base text-center">📋 خطوات إرسال الروشتة</p>
           <div class="space-y-3">
@@ -159,7 +160,6 @@
           </div>
         </div>
 
-        <!-- بيانات العميل -->
         <div class="space-y-3">
           <h4 class="font-bold text-gray-700 text-sm">بيانات التواصل</h4>
           <input
@@ -181,7 +181,6 @@
           ></textarea>
         </div>
 
-        <!-- زرار الإرسال -->
         <button
           id="presc-send-btn"
           onclick="Order.submitPrescription()"
@@ -189,69 +188,21 @@
         >
           <i class="fab fa-whatsapp ml-2"></i> إرسال الروشتة
         </button>
-
       </div>
     </div>
   </div>
-  <!-- ══════════════════════════════════
-       تبويبات الكاتيجوري
-  ══════════════════════════════════ -->
-  <!-- ══ الصفحة الرئيسية ══ -->
-  <div id="home-view">
 
-    <!-- كروت الأقسام -->
-    <div class="px-4 mt-2 mb-4">
-      <h2 class="font-black text-gray-700 text-base mb-3">تسوق حسب القسم</h2>
-      <div id="categories-grid" class="grid grid-cols-2 gap-3">
-        <!-- يتملى من js/ui.js -->
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ══ صفحة القسم (مخفية في الأول) ══ -->
-  <div id="category-view" class="hidden">
-
-    <!-- هيدر القسم -->
-    <div class="flex items-center gap-3 px-4 py-3 sticky top-0 z-40 bg-white/95 backdrop-blur shadow-sm">
-      <button onclick="UI.showHome()"
-        class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center active:scale-90 transition-transform">
-        <i class="fas fa-arrow-right text-gray-600 text-sm"></i>
-      </button>
-      <h2 id="category-title" class="font-black text-gray-800 text-base flex-1"></h2>
-    </div>
-
-    <!-- شريط الأقسام للتنقل -->
-    <div id="tabs-container" class="flex gap-2 px-4 overflow-x-auto py-3 no-scrollbar">
-      <!-- يتملى من js/ui.js -->
-    </div>
-
-    <!-- المنتجات -->
-    <div class="px-4 grid grid-cols-2 gap-4" id="products-list">
-      <!-- يتملى من js/products.js -->
-    </div>
-
-  </div>
-  <!-- ══════════════════════════════════
-       زرار الواتساب العائم
-  ══════════════════════════════════ -->
-  <a href="#" id="whatsappBtn" target="_blank"
+  <a href="#" id="whatsappBtn" target="_blank" aria-label="تواصل عبر الواتساب"
      class="fixed bottom-24 left-4 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-50 border-4 border-white">
     <i class="fab fa-whatsapp"></i>
   </a>
 
-  <!-- ══════════════════════════════════
-       الـ NAV الثابت
-  ══════════════════════════════════ -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-around items-center z-50 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-
-    <!-- الرئيسية -->
     <div class="flex flex-col items-center text-blue-600">
       <i class="fas fa-home text-xl"></i>
       <span class="text-[10px] mt-1 font-bold">الرئيسية</span>
     </div>
 
-    <!-- السلة (في المنتصف) -->
     <div class="flex flex-col items-center text-gray-400 relative" onclick="UI.openCheckout()">
       <div class="bg-blue-600 w-14 h-14 rounded-full flex items-center justify-center text-white absolute -top-10 shadow-xl border-4 border-white cursor-pointer active:scale-95 transition-transform">
         <i class="fas fa-shopping-cart"></i>
@@ -260,42 +211,30 @@
       <span id="cart-total-nav" class="text-[10px] mt-5 font-bold text-blue-600">0 ج.م</span>
     </div>
 
-    <!-- حسابي -->
     <div class="flex flex-col items-center text-gray-400">
       <i class="fas fa-user text-xl"></i>
       <span class="text-[10px] mt-1">حسابي</span>
     </div>
-
   </nav>
 
-  
-  <!-- مودال الـ CHECKOUT
-  ══════════════════════════════════ -->
   <div id="checkoutModal" class="modal">
     <div class="bg-white w-full rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto modal-sheet">
-
-      <!-- الهيدر -->
       <div class="flex justify-between items-center p-5 border-b border-gray-100 sticky top-0 bg-white rounded-t-3xl">
         <h3 class="text-lg font-bold text-gray-800">🛒 إتمام الطلب</h3>
-        <button onclick="UI.closeCheckout()" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
+        <button onclick="UI.closeCheckout()" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-gray-500" aria-label="إغلاق السلة">
           <i class="fas fa-times"></i>
         </button>
       </div>
 
       <div class="p-5 space-y-4 pb-16">
-
-        <!-- قائمة المنتجات في السلة -->
         <div id="cart-items-preview" class="space-y-2">
-          <!-- يتملى من cart.js -->
-        </div>
+          </div>
 
-        <!-- الإجمالي -->
         <div class="flex justify-between items-center font-bold text-lg text-blue-700 py-3 border-y border-dashed border-blue-100">
           <span>الإجمالي</span>
           <span id="cart-total-display">0 ج.م</span>
         </div>
 
-        <!-- بيانات العميل -->
         <div class="space-y-3">
           <h4 class="font-bold text-gray-700 text-sm">بيانات التوصيل</h4>
 
@@ -328,7 +267,6 @@
           </div>
         </div>
 
-        <!-- زرار الإرسال -->
         <button
           id="sendBtn"
           onclick="Order.submit()"
@@ -336,209 +274,183 @@
         >
           <i class="fab fa-whatsapp ml-2"></i> تأكيد وإرسال الطلب
         </button>
-
       </div>
     </div>
   </div>
-  <!-- ══════════════════════════════════
-       المكتبات والـ Scripts
-  ══════════════════════════════════ -->
+
   <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-<!-- ملفات الـ JS بالترتيب الصحيح -->
-<script defer src="js/config.js"></script>
-<script defer src="js/api.js"></script>
-<script defer src="js/cart.js"></script>
-<script defer src="js/products.js"></script>
-<script defer src="js/order.js"></script>
-<script defer src="js/ui.js"></script>
-<script defer src="js/app.js"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/api.js"></script>
+  <script defer src="js/cart.js"></script>
+  <script defer src="js/products.js"></script>
+  <script defer src="js/order.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/app.js"></script>
 
-<!-- ══════════════════════════════════
-     PWA Install Banner
-══════════════════════════════════ -->
+  <div id="pwa-banner" style="
+    display:none;
+    position:fixed;
+    bottom:90px;
+    left:12px;
+    right:12px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0284c7,#0369a1);
+    border-radius:20px;
+    padding:16px 18px;
+    box-shadow:0 8px 32px rgba(2,132,199,0.45);
+    color:white;
+    font-family:'Cairo',sans-serif;
+    animation: slideUpBanner .4s cubic-bezier(.34,1.56,.64,1);
+  ">
+    <style>
+      @keyframes slideUpBanner {
+        from { transform:translateY(20px); opacity:0; }
+        to   { transform:translateY(0);    opacity:1; }
+      }
+    </style>
 
-<!-- البانر نفسه — مخفي في الأول -->
-<div id="pwa-banner" style="
-  display:none;
-  position:fixed;
-  bottom:90px;
-  left:12px;
-  right:12px;
-  z-index:9999;
-  background:linear-gradient(135deg,#0284c7,#0369a1);
-  border-radius:20px;
-  padding:16px 18px;
-  box-shadow:0 8px 32px rgba(2,132,199,0.45);
-  color:white;
-  font-family:'Cairo',sans-serif;
-  animation: slideUpBanner .4s cubic-bezier(.34,1.56,.64,1);
-">
-  <style>
-    @keyframes slideUpBanner {
-      from { transform:translateY(20px); opacity:0; }
-      to   { transform:translateY(0);    opacity:1; }
-    }
-  </style>
-
-  <div style="display:flex;align-items:center;gap:12px;">
-    <!-- اللوجو -->
-    <img src="images/logo.avif"
-      style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;"
-      onerror="this.style.display='none'"
-    >
-
-    <!-- النص -->
-    <div style="flex:1;min-width:0;">
-      <p style="font-weight:900;font-size:14px;margin:0 0 2px;">ثبّت التطبيق على موبايلك</p>
-      <p style="font-size:11px;opacity:0.8;margin:0;">وصول سريع بدون فتح المتصفح</p>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="images/logo.avif"
+        style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;"
+        alt="لوجو الصيدلية"
+        onerror="this.style.display='none'"
+      >
+      <div style="flex:1;min-width:0;">
+        <p style="font-weight:900;font-size:14px;margin:0 0 2px;">ثبّت التطبيق على موبايلك</p>
+        <p style="font-size:11px;opacity:0.8;margin:0;">وصول سريع بدون فتح المتصفح</p>
+      </div>
+      <button onclick="closePwaBanner()" style="
+        background:rgba(255,255,255,0.2);
+        border:none;
+        color:white;
+        width:28px;height:28px;
+        border-radius:50%;
+        font-size:14px;
+        cursor:pointer;
+        flex-shrink:0;
+        display:flex;align-items:center;justify-content:center;
+      " aria-label="إغلاق البانر">✕</button>
     </div>
 
-    <!-- زرار الإغلاق -->
-    <button onclick="closePwaBanner()" style="
-      background:rgba(255,255,255,0.2);
-      border:none;
-      color:white;
-      width:28px;height:28px;
-      border-radius:50%;
-      font-size:14px;
-      cursor:pointer;
-      flex-shrink:0;
-      display:flex;align-items:center;justify-content:center;
-    ">✕</button>
-  </div>
+    <div style="display:flex;gap:10px;margin-top:12px;">
+      <button id="pwa-install-btn" onclick="installPwa()" style="
+        flex:1;
+        background:white;
+        color:#0284c7;
+        border:none;
+        border-radius:12px;
+        padding:10px;
+        font-family:'Cairo',sans-serif;
+        font-weight:900;
+        font-size:13px;
+        cursor:pointer;
+        box-shadow:0 2px 8px rgba(0,0,0,0.15);
+      ">📲 تثبيت التطبيق</button>
 
-  <!-- أزرار التثبيت -->
-  <div style="display:flex;gap:10px;margin-top:12px;">
-    <button id="pwa-install-btn" onclick="installPwa()" style="
-      flex:1;
-      background:white;
-      color:#0284c7;
-      border:none;
-      border-radius:12px;
-      padding:10px;
-      font-family:'Cairo',sans-serif;
-      font-weight:900;
-      font-size:13px;
-      cursor:pointer;
-      box-shadow:0 2px 8px rgba(0,0,0,0.15);
-    ">📲 تثبيت التطبيق</button>
-
-    <button onclick="closePwaBanner()" style="
-      background:rgba(255,255,255,0.15);
-      color:white;
-      border:1px solid rgba(255,255,255,0.3);
-      border-radius:12px;
-      padding:10px 16px;
-      font-family:'Cairo',sans-serif;
-      font-weight:700;
-      font-size:12px;
-      cursor:pointer;
-    ">لاحقاً</button>
-  </div>
-</div>
-
-<!-- بانر خاص بـ iOS (مش بيدعم beforeinstallprompt) -->
-<div id="ios-banner" style="
-  display:none;
-  position:fixed;
-  bottom:90px;
-  left:12px;
-  right:12px;
-  z-index:9999;
-  background:linear-gradient(135deg,#0284c7,#0369a1);
-  border-radius:20px;
-  padding:16px 18px;
-  box-shadow:0 8px 32px rgba(2,132,199,0.45);
-  color:white;
-  font-family:'Cairo',sans-serif;
-  animation: slideUpBanner .4s cubic-bezier(.34,1.56,.64,1);
-">
-  <div style="display:flex;align-items:center;gap:12px;">
-    <img src="images/logo.avif"
-      style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;"
-      onerror="this.style.display='none'"
-    >
-    <div style="flex:1;">
-      <p style="font-weight:900;font-size:14px;margin:0 0 2px;">ثبّت التطبيق على iPhone</p>
-      <p style="font-size:11px;opacity:0.8;margin:0;">اضغط <strong>⎙ مشاركة</strong> ثم <strong>"Add to Home Screen"</strong></p>
+      <button onclick="closePwaBanner()" style="
+        background:rgba(255,255,255,0.15);
+        color:white;
+        border:1px solid rgba(255,255,255,0.3);
+        border-radius:12px;
+        padding:10px 16px;
+        font-family:'Cairo',sans-serif;
+        font-weight:700;
+        font-size:12px;
+        cursor:pointer;
+      ">لاحقاً</button>
     </div>
-    <button onclick="closeIosBanner()" style="
-      background:rgba(255,255,255,0.2);border:none;color:white;
-      width:28px;height:28px;border-radius:50%;font-size:14px;
-      cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;
-    ">✕</button>
   </div>
-  <!-- سهم يشاور على زرار المشاركة -->
-  <div style="text-align:center;margin-top:10px;font-size:11px;opacity:0.7;">
-    ⬇️ زرار المشاركة في أسفل الشاشة
+
+  <div id="ios-banner" style="
+    display:none;
+    position:fixed;
+    bottom:90px;
+    left:12px;
+    right:12px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0284c7,#0369a1);
+    border-radius:20px;
+    padding:16px 18px;
+    box-shadow:0 8px 32px rgba(2,132,199,0.45);
+    color:white;
+    font-family:'Cairo',sans-serif;
+    animation: slideUpBanner .4s cubic-bezier(.34,1.56,.64,1);
+  ">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="images/logo.avif"
+        style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;"
+        alt="لوجو الصيدلية"
+        onerror="this.style.display='none'"
+      >
+      <div style="flex:1;">
+        <p style="font-weight:900;font-size:14px;margin:0 0 2px;">ثبّت التطبيق على iPhone</p>
+        <p style="font-size:11px;opacity:0.8;margin:0;">اضغط <strong>⎙ مشاركة</strong> ثم <strong>"Add to Home Screen"</strong></p>
+      </div>
+      <button onclick="closeIosBanner()" style="
+        background:rgba(255,255,255,0.2);border:none;color:white;
+        width:28px;height:28px;border-radius:50%;font-size:14px;
+        cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+      " aria-label="إغلاق">✕</button>
+    </div>
+    <div style="text-align:center;margin-top:10px;font-size:11px;opacity:0.7;">
+      ⬇️ زرار المشاركة في أسفل الشاشة
+    </div>
   </div>
-</div>
 
   <script>  
-  // ── متغير لحفظ حدث التثبيت ──  
-  let deferredPrompt = null;  
-  
-  // ── اكتشف النوع ──  
-  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);  
-  const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches  
-    || window.navigator.standalone === true;  
-  
-  // ── تسجيل Service Worker ──  
-  if ('serviceWorker' in navigator) {  
-    navigator.serviceWorker.register('/sw.js').catch(console.warn);  
-  }  
-  
-  // ── استقبال حدث التثبيت (Android / Chrome) ──  
-  window.addEventListener('beforeinstallprompt', e => {  
-    e.preventDefault();  
-    deferredPrompt = e;  
-  
-    // أظهر البانر بعد ثانيتين لو التطبيق مش متنصب  
-    if (!isInStandaloneMode && !sessionStorage.getItem('pwa_dismissed')) {  
+    let deferredPrompt = null;  
+    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);  
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches  
+      || window.navigator.standalone === true;  
+    
+    if ('serviceWorker' in navigator) {  
+      navigator.serviceWorker.register('/sw.js').catch(console.warn);  
+    }  
+    
+    window.addEventListener('beforeinstallprompt', e => {  
+      e.preventDefault();  
+      deferredPrompt = e;  
+    
+      if (!isInStandaloneMode && !sessionStorage.getItem('pwa_dismissed')) {  
+        setTimeout(() => {  
+          document.getElementById('pwa-banner').style.display = 'block';  
+        }, 2000);  
+      }  
+    });  
+    
+    if (isIos && !isInStandaloneMode && !sessionStorage.getItem('pwa_dismissed')) {  
       setTimeout(() => {  
-        document.getElementById('pwa-banner').style.display = 'block';  
+        document.getElementById('ios-banner').style.display = 'block';  
       }, 2000);  
     }  
-  });  
-  
-  // ── iOS ──  
-  if (isIos && !isInStandaloneMode && !sessionStorage.getItem('pwa_dismissed')) {  
-    setTimeout(() => {  
-      document.getElementById('ios-banner').style.display = 'block';  
-    }, 2000);  
-  }  
-  
-  // ── تثبيت ──  
-  async function installPwa() {  
-    if (!deferredPrompt) return;  
-    deferredPrompt.prompt();  
-    const { outcome } = await deferredPrompt.userChoice;  
-    deferredPrompt = null;  
-    document.getElementById('pwa-banner').style.display = 'none';  
-    if (outcome === 'accepted') {  
+    
+    async function installPwa() {  
+      if (!deferredPrompt) return;  
+      deferredPrompt.prompt();  
+      const { outcome } = await deferredPrompt.userChoice;  
+      deferredPrompt = null;  
+      document.getElementById('pwa-banner').style.display = 'none';  
+      if (outcome === 'accepted') {  
+        sessionStorage.setItem('pwa_dismissed', 'true');  
+      }  
+    }  
+    
+    function closePwaBanner() {  
+      document.getElementById('pwa-banner').style.display = 'none';  
       sessionStorage.setItem('pwa_dismissed', 'true');  
     }  
-  }  
-  
-  // ── إغلاق البانر ──  
-  function closePwaBanner() {  
-    document.getElementById('pwa-banner').style.display = 'none';  
-    // يعيد الظهور في كل زيارة جديدة (مش بنحفظ في localStorage)  
-    sessionStorage.setItem('pwa_dismissed', 'true');  
-  }  
-  
-  function closeIosBanner() {  
-    document.getElementById('ios-banner').style.display = 'none';  
-    sessionStorage.setItem('pwa_dismissed', 'true');  
-  }  
-  
-  // ── لو اتنصب، اخفي البانر تلقائياً ──  
-  window.addEventListener('appinstalled', () => {  
-    document.getElementById('pwa-banner').style.display = 'none';  
-    document.getElementById('ios-banner').style.display = 'none';  
-  });  
-</script>
+    
+    function closeIosBanner() {  
+      document.getElementById('ios-banner').style.display = 'none';  
+      sessionStorage.setItem('pwa_dismissed', 'true');  
+    }  
+    
+    window.addEventListener('appinstalled', () => {  
+      document.getElementById('pwa-banner').style.display = 'none';  
+      document.getElementById('ios-banner').style.display = 'none';  
+    });  
+  </script>
 
 </body>
 </html>
