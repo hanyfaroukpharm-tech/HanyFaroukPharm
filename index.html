@@ -10,13 +10,14 @@
   <meta name="theme-color" content="#0284c7">
 
   <link rel="preload" href="images/cover.avif" as="image" fetchpriority="high">
+  <link rel="preload" href="images/logo.avif" as="image">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
-  <script defer src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
 
 
@@ -102,7 +103,7 @@
     <div id="home-view">
       <div class="px-4 mt-2 mb-4">
         <h2 class="font-black text-gray-700 text-base mb-3">تسوق حسب القسم</h2>
-        <div id="categories-grid" class="grid grid-cols-2 gap-3" style="min-height:340px;">
+        <div id="categories-grid" class="grid grid-cols-2 gap-3">
           </div>
       </div>
     </div>
@@ -315,8 +316,6 @@
       <img src="images/logo.avif"
         style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;"
         alt="لوجو الصيدلية"
-        loading="lazy"
-        decoding="async"
         onerror="this.style.display='none'"
       >
       <div style="flex:1;min-width:0;">
@@ -384,8 +383,6 @@
       <img src="images/logo.avif"
         style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;"
         alt="لوجو الصيدلية"
-        loading="lazy"
-        decoding="async"
         onerror="this.style.display='none'"
       >
       <div style="flex:1;">
