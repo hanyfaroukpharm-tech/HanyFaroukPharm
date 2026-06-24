@@ -59,22 +59,23 @@
     </div>
 
     <div class="relative z-30 h-full p-4 flex flex-col justify-end">
-      <div class="flex items-center justify-start gap-3">
-        <span id="pharmacy-status" class="status-badge">مفتوح الآن</span>
-        <button id="search-btn" class="search-trigger-btn" aria-label="بحث في المنتجات">
-          <i class="fas fa-search"></i>
+      
+      <div class="absolute top-[145px] right-4 left-4 flex items-center justify-between gap-3 bg-white/10 backdrop-blur-sm p-1.5 rounded-full px-3">
+        <span id="pharmacy-status" class="status-badge !m-0">مفتوح الآن</span>
+        <button id="search-btn" class="search-trigger-btn !bg-white/20 !w-8 !h-8 !rounded-full flex items-center justify-center text-white" aria-label="بحث في المنتجات">
+          <i class="fas fa-search text-xs"></i>
         </button>
       </div>
 
-      <div id="search-bar" class="hidden mt-3 animate-fade-in"> 
-        <div class="flex items-center gap-2">
+      <div id="search-bar" class="hidden absolute top-[140px] right-4 left-4 z-40 animate-fade-in"> 
+        <div class="flex items-center gap-2 bg-white/90 p-1 rounded-xl shadow-lg">
           <input
             id="search-input"
             type="text"
             placeholder="ابحث عن دواء أو منتج..."
-            class="search-input-field"
+            class="search-input-field flex-1"
           >
-          <button id="close-search" class="close-search-btn bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-white" aria-label="إغلاق البحث">
+          <button id="close-search" class="close-search-btn bg-gray-200 w-10 h-10 rounded-xl flex items-center justify-center text-gray-700" aria-label="إغلاق البحث">
             <i class="fas fa-times"></i>
           </button>
         </div>
