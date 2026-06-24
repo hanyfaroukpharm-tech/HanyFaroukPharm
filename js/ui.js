@@ -16,7 +16,7 @@ const UI = {
     });
   },
 
-  // 🛍️ تحميل منتجات العروض في الـ Slider
+    // 🛍️ تحميل منتجات العروض في الـ Slider
   async loadPromoSlider() {
     const wrapper = document.getElementById("swiper-wrapper");
     if (!wrapper) return;
@@ -37,8 +37,8 @@ const UI = {
           ? (item.Image.startsWith("http") ? item.Image : `images/products/${item.Image}`)
           : "";
         return `
-        <div class="swiper-slide">
-          <div class="h-36 flex items-center overflow-hidden relative rounded-2xl">
+        <div class="swiper-slide cursor-pointer" onclick="UI.openCategory('العروض'); setTimeout(() => { const listEL = document.getElementById('products-list'); if(listEL) window.scrollTo({top: listEL.offsetTop - 100, behavior: 'smooth'}); }, 300)">
+          <div class="h-36 flex items-center overflow-hidden relative rounded-2xl active:scale-[0.99] transition-transform">
             ${imgSrc ? `
             <div class="absolute inset-0">
               <img src="${imgSrc}" class="w-full h-full object-cover"
