@@ -25,8 +25,11 @@ async function initApp() {
 
   // 4️⃣ تحميل المنتجات + الـ Slider من العروض
   await Products.load();
-  await UI.loadPromoSlider(); // ← جديد: يحمل العروض في الـ Slider
-  await UI.initCategoryCards(); // ← جديد
+  await UI.loadPromoSlider(); // يحمل العروض في الـ Slider
+  await UI.initCategoryCards(); 
+
+  // 🎁 5️⃣ التحقق من العرض المنبثق (Popup Modal) وتفعيله تلقائياً للعميل
+  await UI.checkPopupPromo();
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
