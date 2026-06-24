@@ -263,7 +263,7 @@ const UI = {
     if (btn && number) btn.href = `https://wa.me/${number}`;
   },
 
-  // 🏥 تحديث حالة الصيدلية
+    // 🏥 تحديث حالة الصيدلية
   updatePharmacyStatus(status) {
     const indicator = document.getElementById("pharmacy-status");
     if (!indicator) return;
@@ -275,4 +275,63 @@ const UI = {
       indicator.className = "text-[10px] bg-red-500 text-white px-2 py-0.5 rounded-full font-bold";
     }
   },
+
+  // 🎁 التحقق من وجود عرض منبثق عند فتح التطبيق وتشغيله
+  async checkPopupPromo() {
+    const modal = document.getElementById("popup-promo-modal");
+    const body  = document.getElementById("popup-promo-body");
+    const closeBtn = document.getElementById("close-popup-promo");
+    if (!modal || !body) return;
+
+    // تفعيل زر الإغلاق (×) ليعيد إخفاء المودال
+    closeBtn?.addEventListener("click", (e) => {
+      e.stopPropagation(); // منع انتشار الضغطة للجسم الخلفي
+      modal.classList.add("hidden");
+    });
+
+    try {
+      // جلب البيانات من الشيت الجديد PopupPromo
+      const res = await fetch(`${CONFIG.API_URL}?sheet=PopupPromo`);
+      const data = await res.json();
+      
+      // البحث عن أول سطر يكون فيه الـ Active يساوي TRUE
+      const promo = data.find(p => p.Active === true || p.Active === "TRUE" || p.Active === "true");
+      
+      if (!promo) return; // لو مفيش أي عرض فعال، لن يظهر شيء للعميل
+
+      const imgSrc = promo.Image ? (promo.Image.startsWith("http") ? promo.Image : `images/products/${promo.Image}`) : "images/products/default.avif";
+
+      // بناء محتوى المودال ديناميكياً بالصورة والبيانات
+      body.innerHTML = `
+        <div class="relative">
+          <img src="${imgSrc}" alt="${promo.Name || 'عرض خاص'}" class="w-full h-auto object-cover max-h-[380px]">
+          <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5 text-right pt-16">
+            <span class="text-[10px] bg-yellow-400 text-black px-2 py-0.5 rounded-full font-bold mb-1.5 inline-block">🔥 عرض حصري الآن</span>
+            <h3 class="font-black text-white text-base leading-tight">${promo.Name || ''}</h3>
+            <p class="text-white/80 text-[11px] mt-1 font-medium">اضغط هنا للشراء والانتقال لقسم العروض مباشرة 🛒</p>
+          </div>
+        </div>
+      `;
+
+      // عند ضغط العميل على صورة العرض
+      body.onclick = () => {
+        modal.classList.add("hidden"); // إغلاق النافذة
+        UI.openCategory("العروض"); // فتح قسم العروض تلقائياً
+        setTimeout(() => {
+          const listEL = document.getElementById("products-list");
+          if(listEL) window.scrollTo({top: listEL.offsetTop - 100, behavior: "smooth"}); // سكرول ناعم للمنتجات
+        }, 300);
+      };
+
+      // إظهار النافذة المنبثقة تلقائياً بعد ثانية ونصف من دخول التطبيق
+      setTimeout(() => {
+        modal.classList.remove("hidden");
+        modal.firstElementChild?.classList.replace("scale-95", "scale-100");
+      }, 1500);
+
+    } catch (e) {
+      console.warn("فشل جلب العرض المنبثق للرئيسية", e);
+    }
+  },
+
 };
