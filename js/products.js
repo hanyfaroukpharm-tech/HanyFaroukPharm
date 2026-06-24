@@ -89,18 +89,41 @@ const Products = {
     }
   },
 
-  // 🔍 بحث في المنتجات
+    // 🔍 بحث في المنتجات (تعديل للعمل من الصفحة الرئيسية)
   search(query) {
     const q = query.trim().toLowerCase();
+    
+    const homeView = document.getElementById("home-view");
+    const categoryView = document.getElementById("category-view");
+    const categoryTitle = document.getElementById("category-title");
+
     if (!q) {
+      // لو فضّى خانة البحث، يرجع الكل ويرجعه للصفحة الرئيسية
       this.filtered = this.all;
+      
+      if (homeView && categoryView) {
+        categoryView.classList.add("hidden");
+        homeView.classList.remove("hidden");
+      }
     } else {
+      // لو بيبحث وهو في الرئيسية، يحوله لصفحة العرض ويغير العنوان
+      if (homeView && !homeView.classList.contains("hidden")) {
+        homeView.classList.add("hidden");
+        categoryView.classList.remove("hidden");
+      }
+      
+      if (categoryTitle) {
+        categoryTitle.textContent = "نتائج البحث عن: " + query;
+      }
+
+      // الفلترة الفورية بداخل كل المنتجات
       this.filtered = this.all.filter(p =>
         p.Name.toLowerCase().includes(q) ||
         (p.Description && p.Description.toLowerCase().includes(q)) ||
-        (p.Category && p.Category.includes(q))
+        (p.Category && p.Category.toLowerCase().includes(q))
       );
     }
+    
     this.render(this.filtered);
   },
 
