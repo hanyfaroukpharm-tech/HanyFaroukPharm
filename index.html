@@ -224,6 +224,10 @@
           <h4 class="font-bold text-gray-700 text-sm">بيانات التوصيل</h4>
           <input type="text" id="cust-name" placeholder="الاسم بالكامل" class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl text-sm font-bold">
           <input type="tel" id="cust-phone" placeholder="رقم الموبايل" class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl text-sm">
+
+          <!-- كود الخصم -->
+          <input type="text" id="discount-code" placeholder="كود الخصم (اختياري)" class="w-full bg-amber-50 border border-amber-200 p-3 rounded-xl text-sm font-bold text-amber-700 placeholder-amber-400">
+
           <div class="relative">
             <textarea id="cust-address" placeholder="العنوان بالتفصيل (الشارع، العمارة، الدور...)" class="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl text-sm h-24 resize-none"></textarea>
             <button id="location-btn" onclick="Order.getLocation()" class="absolute left-2 bottom-2 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-[11px] font-bold border border-blue-200 flex items-center gap-1">
