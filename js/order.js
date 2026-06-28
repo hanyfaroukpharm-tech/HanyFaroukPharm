@@ -38,19 +38,12 @@ const Order = {
     return true;
   },
 
-  // ✅ التحقق من بيانات الروشتة
-  _validatePrescription(name, phone) {
-    if (!name.trim())                              { alert("برجاء إدخال الاسم");            return false; }
-    if (!phone.trim() || phone.trim().length < 10) { alert("برجاء إدخال رقم موبايل صحيح"); return false; }
-    if (!this.prescriptionImage)                   { alert("برجاء إضافة صورة الروشتة");    return false; }
-    return true;
-  },
-
   // 🚀 إرسال الطلب العادي
   async submit() {
-    const name    = document.getElementById("cust-name")?.value    || "";
-    const phone   = document.getElementById("cust-phone")?.value   || "";
-    const address = document.getElementById("cust-address")?.value || "";
+    const name         = document.getElementById("cust-name")?.value     || "";
+    const phone        = document.getElementById("cust-phone")?.value    || "";
+    const address       = document.getElementById("cust-address")?.value  || "";
+    const discountCode = document.getElementById("discount-code")?.value.trim() || "";
 
     if (!this._validate(name, phone, address)) return;
 
@@ -67,7 +60,7 @@ const Order = {
       OrderID:           orderID,
       CustomerName:      name,
       Phone:             phone,
-      OrderDetails:      details,
+      OrderDetails:      details + (discountCode ? `\n🏷️ كود الخصم: ${discountCode}` : ""),
       PrescriptionImage: "",
       Total:             total,
       Status:            "قيد الانتظار",
@@ -80,12 +73,14 @@ const Order = {
 
     try {
       await API.submitOrder(orderData);
-      this._openWhatsApp(name, phone, address, orderID, details, total);
+      this._openWhatsApp(name, phone, address, orderID, details, total, discountCode);
       Cart.clear();
       UI.closeCheckout();
       this.userLocation = "";
       const status = document.getElementById("location-status");
       if (status) status.classList.add("hidden");
+      const discountInput = document.getElementById("discount-code");
+      if (discountInput) discountInput.value = "";
     } catch (e) {
       alert("حدث خطأ، حاول مجدداً");
     } finally {
@@ -94,7 +89,6 @@ const Order = {
   },
 
   // ══════════════════════════════════════
- // ══════════════════════════════════════
   //  📋 PRESCRIPTION — الروشتة
   // ══════════════════════════════════════
 
@@ -178,7 +172,7 @@ const Order = {
   },
 
   // 📲 فتح واتساب للطلب العادي
-  _openWhatsApp(name, phone, address, orderID, details, total) {
+  _openWhatsApp(name, phone, address, orderID, details, total, discountCode) {
     const waNumber = window.APP_SETTINGS?.WhatsAppNumber || "";
     let msg = `*🏥 طلب جديد — ${CONFIG.PHARMACY_NAME}*\n`;
     msg += `*رقم الفاتورة:* #${orderID}\n`;
@@ -189,6 +183,7 @@ const Order = {
     if (this.userLocation) msg += `🗺️ *الموقع:* ${this.userLocation}\n`;
     msg += `━━━━━━━━━━━━━━━━━━\n`;
     msg += `*🛒 الأصناف:*\n${details}\n`;
+    if (discountCode) msg += `\n🏷️ *كود الخصم:* ${discountCode}\n`;
     msg += `━━━━━━━━━━━━━━━━━━\n`;
     msg += `*💰 الإجمالي: ${total} ج.م*`;
 
