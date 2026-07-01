@@ -16,8 +16,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://i.ibb.co">
+  <link rel="preconnect" href="https://script.googleusercontent.com">
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.tailwindcss.com"></script>
 
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"></noscript>
@@ -109,7 +111,7 @@
     <div id="home-view">
       <div class="px-4 mt-2 mb-4">
         <h2 class="font-black text-gray-700 text-base mb-3">تسوق حسب القسم</h2>
-        <div id="categories-grid" class="grid grid-cols-2 gap-3"></div>
+        <div id="categories-grid" class="grid grid-cols-2 gap-3" style="min-height:340px;"></div>
       </div>
     </div>
 
@@ -322,14 +324,10 @@
 
 <div id="popup-promo-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
   <div class="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-sm w-full relative transform scale-95 transition-transform duration-300">
-    
-    <button id="close-popup-promo" class="absolute top-3 left-3 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center z-10 transition-colors">
+    <button id="close-popup-promo" aria-label="إغلاق العرض" class="absolute top-3 left-3 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center z-10 transition-colors">
       <i class="fas fa-times text-sm"></i>
     </button>
-
-    <div id="popup-promo-body" class="cursor-pointer">
-      </div>
-
+    <div id="popup-promo-body" class="cursor-pointer"></div>
   </div>
 </div>
 
