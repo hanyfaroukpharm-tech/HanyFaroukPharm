@@ -41,7 +41,7 @@ const UI = {
           <div class="h-36 flex items-center overflow-hidden relative rounded-2xl active:scale-[0.99] transition-transform">
             ${imgSrc ? `
             <div class="absolute inset-0">
-              <img src="${imgSrc}" class="w-full h-full object-cover"
+              <img src="${imgSrc}" alt="${item.Name}" class="w-full h-full object-cover"
                 onerror="this.parentElement.parentElement.classList.add('bg-gradient-to-br','${color}')">
             </div>` : `<div class="absolute inset-0 bg-gradient-to-br ${color}"></div>`}
             <div class="absolute inset-0" style="background:linear-gradient(to left,rgba(0,0,0,0.65) 40%,transparent 100%);"></div>
@@ -129,7 +129,7 @@ const UI = {
 
           <!-- الخلفية — صورة أو gradient -->
           ${imgSrc ? `
-          <img src="${imgSrc}" class="absolute inset-0 w-full h-full object-cover">
+          <img src="${imgSrc}" alt="${cat.Name}" class="absolute inset-0 w-full h-full object-cover">
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
           ` : `
           <div class="absolute inset-0 bg-gradient-to-br ${color.bg}"></div>
