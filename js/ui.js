@@ -228,7 +228,7 @@ const UI = {
     window.scrollTo({ top: 0, behavior: "smooth" });
   },
 
-  // 🗂️ شريط الأقسام الداخلي — مع Sticky
+  // 🗂️ شريط الأقسام الداخلي — مع Floating Bar
   async initTabs() {
     const container = document.getElementById("tabs-container");
     if (!container) return;
@@ -245,25 +245,119 @@ const UI = {
       >${cat}</button>
     `).join("");
 
-    // ✅ Sticky: شريط الأقسام يثبت أثناء السكرول
-    this._initStickyTabs(container);
+    // ✅ Floating bar يظهر عند السكرول
+    this._initFloatingTabs(container, categories);
   },
 
-  // ✅ Sticky tabs بـ IntersectionObserver (أداء أفضل من scroll event)
-  _initStickyTabs(container) {
+  // ✅ Floating Tabs Bar — يظهر عند السكرول بتصميم glassmorphism
+  _initFloatingTabs(container, categories) {
+    // إنشاء الـ floating bar
+    const bar = document.createElement("div");
+    bar.id = "floating-tabs-bar";
+    bar.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 45;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(2,132,199,0.12);
+      box-shadow: 0 4px 24px rgba(2,132,199,0.13), 0 1.5px 6px rgba(0,0,0,0.07);
+      transform: translateY(-110%);
+      transition: transform 0.35s cubic-bezier(0.34,1.4,0.64,1), opacity 0.3s ease;
+      opacity: 0;
+    `;
+
+    // شريط اللون العلوي
+    bar.innerHTML = `
+      <div style="
+        position:absolute; top:0; left:0; right:0; height:3px;
+        background: linear-gradient(to left, #0284c7, #06b6d4, #0284c7);
+        background-size: 200% 100%;
+        animation: shimmerBar 2.5s linear infinite;
+      "></div>
+      <div id="floating-tabs-inner"
+        style="display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; padding-bottom:2px;">
+      </div>
+      <style>
+        #floating-tabs-inner::-webkit-scrollbar { display:none; }
+        @keyframes shimmerBar {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+        .ftab-btn {
+          flex-shrink: 0;
+          padding: 6px 16px;
+          border-radius: 999px;
+          font-family: 'Cairo', sans-serif;
+          font-weight: 700;
+          font-size: 12px;
+          white-space: nowrap;
+          border: 1.5px solid #e5e7eb;
+          background: white;
+          color: #6b7280;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .ftab-btn:active { transform: scale(0.93); }
+        .ftab-btn.ftab-active {
+          background: linear-gradient(135deg, #0284c7, #0369a1);
+          color: white;
+          border-color: transparent;
+          box-shadow: 0 4px 14px rgba(2,132,199,0.4);
+          transform: scale(1.04);
+        }
+      </style>
+    `;
+
+    document.body.appendChild(bar);
+
+    // ملء الأزرار
+    const inner = bar.querySelector("#floating-tabs-inner");
+    inner.innerHTML = categories.map((cat, i) => `
+      <button
+        class="ftab-btn ${i === 0 ? "ftab-active" : ""}"
+        data-fcat="${cat}"
+        onclick="UI._selectFloatingTab(this, '${cat}')"
+      >${cat}</button>
+    `).join("");
+
+    // IntersectionObserver لإظهار/إخفاء الـ bar
     const sentinel = document.createElement("div");
-    sentinel.style.cssText = "height:1px;margin-top:-1px;";
+    sentinel.style.cssText = "height:1px;pointer-events:none;";
     container.parentElement?.insertBefore(sentinel, container);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        container.classList.toggle("shadow-md", !entry.isIntersecting);
-        container.classList.toggle("bg-white/95", !entry.isIntersecting);
-        container.classList.toggle("backdrop-blur", !entry.isIntersecting);
-      },
-      { threshold: 0, rootMargin: "-56px 0px 0px 0px" }
-    );
+    let _visible = false;
+    const observer = new IntersectionObserver(([entry]) => {
+      const shouldShow = !entry.isIntersecting;
+      if (shouldShow === _visible) return;
+      _visible = shouldShow;
+      if (shouldShow) {
+        bar.style.transform = "translateY(0)";
+        bar.style.opacity   = "1";
+      } else {
+        bar.style.transform = "translateY(-110%)";
+        bar.style.opacity   = "0";
+      }
+    }, { threshold: 0, rootMargin: "-60px 0px 0px 0px" });
+
     observer.observe(sentinel);
+  },
+
+  // اختيار تاب في الـ floating bar
+  _selectFloatingTab(btn, cat) {
+    // sync مع الشريط الرئيسي
+    const mainBtn = document.querySelector(`.tab-btn[data-cat="${cat}"]`);
+    if (mainBtn) this.selectTab(mainBtn, cat);
+
+    // تحديث الـ floating bar
+    document.querySelectorAll(".ftab-btn").forEach(b => b.classList.remove("ftab-active"));
+    btn.classList.add("ftab-active");
+    btn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
   },
 
   // اختيار تبويب
@@ -282,6 +376,11 @@ const UI = {
       cat === "الكل" ? "كل المنتجات" : cat;
 
     Products.filterByCategory(cat);
+
+    // ✅ sync مع الـ floating bar
+    document.querySelectorAll(".ftab-btn").forEach(b => {
+      b.classList.toggle("ftab-active", b.dataset.fcat === cat);
+    });
   },
 
   resetTabs() {
