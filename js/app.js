@@ -1,35 +1,79 @@
 // ============================================================
-//  app.js — نقطة البداية، بيشغّل كل حاجة
+// app.js — Optimized Version
 // ============================================================
 
 window.APP_SETTINGS = {};
 
 async function initApp() {
-  // 1️⃣ تهيئة الـ UI
-  await UI.initTabs();
+
+  // ============================
+  // 1- تهيئة الواجهة فوراً
+  // ============================
+
   UI.initSearch();
   UI.fillSavedCustomerData();
 
-  // 2️⃣ استرجاع السلة المحفوظة
   Cart.load();
 
-  // 3️⃣ تحميل إعدادات الأدمن
-  try {
-    const settings = await API.getAdminSettings();
-    window.APP_SETTINGS = settings;
-    UI.updateWhatsappBtn(settings.WhatsAppNumber);
-    UI.updatePharmacyStatus(settings.PharmacyStatus);
-  } catch (e) {
-    console.warn("تعذّر تحميل إعدادات الأدمن", e);
-  }
+  // ============================
+  // 2- تشغيل العمليات بالتوازي
+  // ============================
 
-  // 4️⃣ تحميل المنتجات + الـ Slider من العروض
-  await Products.load();
-  await UI.loadPromoSlider(); // يحمل العروض في الـ Slider
-  await UI.initCategoryCards(); 
+  const adminPromise = API.getAdminSettings()
+    .then(settings => {
+      window.APP_SETTINGS = settings;
+      UI.updateWhatsappBtn(settings.WhatsAppNumber);
+      UI.updatePharmacyStatus(settings.PharmacyStatus);
+    })
+    .catch(err => console.warn("تعذر تحميل إعدادات الأدمن", err));
 
-  // 🎁 5️⃣ التحقق من العرض المنبثق (Popup Modal) وتفعيله تلقائياً للعميل
-  await UI.checkPopupPromo();
+  const tabsPromise = UI.initTabs();
+
+  const productsPromise = Products.load();
+
+  // ============================
+  // 3- بعد ظهور المنتجات
+  // ============================
+
+  await Promise.all([
+    adminPromise,
+    tabsPromise,
+    productsPromise
+  ]);
+
+  // ============================
+  // 4- تحميل الأشياء الثانوية
+  // ============================
+
+  requestIdleCallback(async () => {
+
+    try {
+
+      await Promise.all([
+        UI.loadPromoSlider(),
+        UI.initCategoryCards()
+      ]);
+
+    } catch (e) {
+      console.warn(e);
+    }
+
+  });
+
+  // ============================
+  // 5- Popup بعد انتهاء الرسم
+  // ============================
+
+  setTimeout(() => {
+
+    requestAnimationFrame(() => {
+
+      UI.checkPopupPromo();
+
+    });
+
+  }, 3500);
+
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
