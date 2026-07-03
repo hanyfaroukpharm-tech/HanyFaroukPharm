@@ -1,5 +1,5 @@
 // ============================================================
-//  ui.js — Slider, Modals, Tabs, Search, Promos
+//  ui.js — Slider, Modals, Tabs, Search, Promos & Navigation
 // ============================================================
 
 const UI = {
@@ -131,6 +131,56 @@ const UI = {
   },
 
   // ══════════════════════════════════════
+  //  🗺️ نظام التنقل والتبديل بين الشاشات
+  // ══════════════════════════════════════
+
+  // 🏠 الانتقال للرئيسية والطلوع لأول الصفحة
+  navigateToHome() {
+    document.getElementById("category-view").classList.add("hidden");
+    document.getElementById("contact-view").classList.add("hidden");
+    document.getElementById("home-view").classList.remove("hidden");
+
+    // تحديث ألوان الأزرار في النبار السفلي
+    document.getElementById("nav-home").className = "flex flex-col items-center text-blue-600 cursor-pointer";
+    document.getElementById("nav-contact").className = "flex flex-col items-center text-gray-400 cursor-pointer";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+
+  // 📞 الانتقال لصفحة تواصل معنا
+  navigateToContact() {
+    document.getElementById("home-view").classList.add("hidden");
+    document.getElementById("category-view").classList.add("hidden");
+    document.getElementById("contact-view").classList.remove("hidden");
+
+    // تحديث ألوان الأزرار في النبار السفلي
+    document.getElementById("nav-home").className = "flex flex-col items-center text-gray-400 cursor-pointer";
+    document.getElementById("nav-contact").className = "flex flex-col items-center text-blue-600 cursor-pointer";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+
+  // 🔗 مشاركة التطبيق عبر الـ Web Share API
+  async shareApp() {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'صيدليات د. هاني فاروق',
+          text: 'اطلب أدويتك ومستحضراتك الطبية بسهولة عبر تطبيق صيدلية د. هاني فاروق الحصري وتوصيل مجاني وسريع للطلبات!',
+          url: 'https://hany-farouk-pharm.vercel.app/'
+        });
+      } catch (err) {
+        console.log('تم إلغاء المشاركة أو حدث خطأ:', err);
+      }
+    } else {
+      // Fallback في حالة المتصفح لا يدعم الخاصية
+      const shareUrl = 'https://hany-farouk-pharm.vercel.app/';
+      navigator.clipboard.writeText(shareUrl);
+      alert('تم نسخ رابط التطبيق بنجاح! يمكنك الآن إرساله لأصدقائك 📱');
+    }
+  },
+
+  // ══════════════════════════════════════
   //  🗂️ كروت الأقسام — الصفحة الرئيسية
   // ══════════════════════════════════════
 
@@ -203,6 +253,7 @@ const UI = {
   // فتح قسم معين
   openCategory(catName) {
     document.getElementById("home-view").classList.add("hidden");
+    document.getElementById("contact-view").classList.add("hidden");
     document.getElementById("category-view").classList.remove("hidden");
     document.getElementById("category-title").textContent = catName;
 
@@ -217,6 +268,10 @@ const UI = {
       }
     });
 
+    // إعادة ضبط تفعيل النبار ليبقى على الأقسام التابعة للرئيسية
+    document.getElementById("nav-home").className = "flex flex-col items-center text-blue-600 cursor-pointer";
+    document.getElementById("nav-contact").className = "flex flex-col items-center text-gray-400 cursor-pointer";
+
     // ✅ smooth scroll للأعلى
     window.scrollTo({ top: 0, behavior: "smooth" });
   },
@@ -224,6 +279,7 @@ const UI = {
   // الرجوع للصفحة الرئيسية
   showHome() {
     document.getElementById("category-view").classList.add("hidden");
+    document.getElementById("contact-view").classList.add("hidden");
     document.getElementById("home-view").classList.remove("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
   },
