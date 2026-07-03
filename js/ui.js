@@ -483,7 +483,7 @@ const UI = {
       setTimeout(() => {
         modal.classList.remove("hidden");
         modal.firstElementChild?.classList.replace("scale-95", "scale-100");
-      }, 5000);
+      }, 2000);
 
     } catch (e) {
       console.warn("فشل جلب العرض المنبثق للرئيسية", e);
