@@ -92,35 +92,37 @@
   </header>
 
   <main>
-    <div class="mt-4 px-4">
-      <div class="swiper mySwiper swiper-placeholder-fix rounded-2xl overflow-hidden shadow-md">
-        <div class="swiper-wrapper" id="swiper-wrapper"></div>
-        <div class="swiper-pagination"></div>
-      </div>
-    </div>
-
-    <div class="mx-4 my-4 bg-white p-4 rounded-2xl shadow-sm border border-blue-50 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="bg-blue-50 w-11 h-11 rounded-full flex items-center justify-center text-blue-600">
-          <i class="fas fa-file-medical text-lg"></i>
-        </div>
-        <div>
-          <h4 class="font-bold text-sm text-gray-800">ارسل روشتة</h4>
-          <p class="text-[10px] text-gray-500">صور الروشتة وهنوصلك فوراً</p>
-        </div>
-      </div>
-      <button onclick="Order.openPrescriptionModal()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">
-        ارسل روشتة
-      </button>
-    </div>
-
+    <!-- قسم الرئيسية الافتراضي -->
     <div id="home-view">
+      <div class="mt-4 px-4">
+        <div class="swiper mySwiper swiper-placeholder-fix rounded-2xl overflow-hidden shadow-md">
+          <div class="swiper-wrapper" id="swiper-wrapper"></div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+
+      <div class="mx-4 my-4 bg-white p-4 rounded-2xl shadow-sm border border-blue-50 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="bg-blue-50 w-11 h-11 rounded-full flex items-center justify-center text-blue-600">
+            <i class="fas fa-file-medical text-lg"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm text-gray-800">ارسل روشتة</h4>
+            <p class="text-[10px] text-gray-500">صور الروشتة وهنوصلك فوراً</p>
+          </div>
+        </div>
+        <button onclick="Order.openPrescriptionModal()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">
+          ارسل روشتة
+        </button>
+      </div>
+
       <div class="px-4 mt-2 mb-4">
         <h2 class="font-black text-gray-700 text-base mb-3">تسوق حسب القسم</h2>
         <div id="categories-grid" class="grid grid-cols-2 gap-3" style="min-height:340px;"></div>
       </div>
     </div>
 
+    <!-- قسم تصفح الأقسام -->
     <div id="category-view" class="hidden">
       <div class="flex items-center gap-3 px-4 py-3 sticky top-0 z-40 bg-white/95 backdrop-blur shadow-sm">
         <button onclick="UI.showHome()" aria-label="العودة للرئيسية"
@@ -132,6 +134,72 @@
 
       <div id="tabs-container" class="flex gap-2 px-4 overflow-x-auto py-3 no-scrollbar"></div>
       <div class="px-4 grid grid-cols-2 gap-4" id="products-list"></div>
+    </div>
+
+    <!-- قسم تواصل معنا الجديد -->
+    <div id="contact-view" class="hidden px-4 py-6 space-y-5 animate-fade-in">
+      <!-- بطاقة تعريفية بالصيدلية -->
+      <div class="bg-white p-5 rounded-3xl shadow-sm border border-blue-50 text-center relative overflow-hidden">
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full opacity-60"></div>
+        <div class="w-16 h-16 bg-gradient-to-tr from-blue-600 to-sky-400 text-white rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-md shadow-blue-100 mb-3">
+          <i class="fas fa-heartbeat"></i>
+        </div>
+        <h3 class="font-black text-gray-800 text-lg mb-1">صيدليات د. هاني فاروق</h3>
+        <p class="text-xs text-gray-500 leading-relaxed max-w-xs mx-auto">
+          نحن ملتزمون بتقديم أفضل خدمة رعاية صحية متكاملة وتوفير كافة الأدوية والمستحضرات الطبية ومستحضرات التجميل الأصلية بجودة عالية وتوصيل سريع ومباشر لباب منزلك.
+        </p>
+      </div>
+
+      <!-- خطوات استخدام التطبيق -->
+      <div class="bg-white p-5 rounded-3xl shadow-sm border border-blue-50">
+        <h4 class="font-black text-gray-800 text-sm mb-4 flex items-center gap-2">
+          <i class="fas fa-star text-amber-500 text-xs"></i> كيف تستخدم التطبيق؟
+        </h4>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">١</span>
+            <div>
+              <h5 class="text-xs font-bold text-gray-800 mb-0.5">اختر منتجاتك أو صوّر الروشتة</h5>
+              <p class="text-[11px] text-gray-400">تصفح الأقسام المتنوعة أو أضف الأدوية إلى سلتك مباشرة.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">٢</span>
+            <div>
+              <h5 class="text-xs font-bold text-gray-800 mb-0.5">أكّد الطلب بلمسة واحدة</h5>
+              <p class="text-[11px] text-gray-400">راجع السلة، أدخل اسمك وعنوانك بكل سهولة وبدون تعقيد.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">٣</span>
+            <div>
+              <h5 class="text-xs font-bold text-gray-800 mb-0.5">التوصيل والمتابعة على الواتساب</h5>
+              <p class="text-[11px] text-gray-400">سيفتح التطبيق محادثة واتساب لتأكيد طلبك وتوصيله فوراً.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- أزرار التواصل التفاعلية -->
+      <div class="grid grid-cols-3 gap-3">
+        <a href="https://wa.me/201015321564" target="_blank" class="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition-transform">
+          <i class="fab fa-whatsapp text-2xl text-emerald-500"></i>
+          <span class="text-[10px] font-bold text-gray-700">واتساب</span>
+        </a>
+        <a href="https://www.facebook.com/share/1HWeuJFiuL/" target="_blank" class="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition-transform">
+          <i class="fab fa-facebook text-2xl text-blue-600"></i>
+          <span class="text-[10px] font-bold text-gray-700">فيسبوك</span>
+        </a>
+        <a href="https://www.instagram.com/hanyfarouk2026?igsh=MXh5ZHZrcjFleXRkcw==" target="_blank" class="bg-pink-50 border border-pink-100 p-4 rounded-2xl flex flex-col items-center justify-center gap-1.5 active:scale-95 transition-transform">
+          <i class="fab fa-instagram text-2xl text-pink-600"></i>
+          <span class="text-[10px] font-bold text-gray-700">إنستجرام</span>
+        </a>
+      </div>
+
+      <!-- زرار شاركنا مع أصحابك -->
+      <button onclick="UI.shareApp()" class="w-full bg-gradient-to-r from-blue-600 to-sky-500 text-white p-4 rounded-2xl font-black text-sm shadow-md shadow-blue-100 flex items-center justify-center gap-2 active:scale-98 transition-transform">
+        <i class="fas fa-share-alt"></i> شارك التطبيق مع أصدقائك
+      </button>
     </div>
   </main>
 
@@ -186,17 +254,20 @@
     </div>
   </div>
 
-  <a href="#" id="whatsappBtn" target="_blank" aria-label="تواصل عبر الواتساب"
+  <a href="https://wa.me/201015321564" id="whatsappBtn" target="_blank" aria-label="تواصل عبر الواتساب"
      class="fixed bottom-24 left-4 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl text-2xl z-50 border-4 border-white">
     <i class="fab fa-whatsapp"></i>
   </a>
 
+  <!-- شريط التنقل السفلي المعدل -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-around items-center z-50 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-    <div class="flex flex-col items-center text-blue-600">
+    <!-- تابة الرئيسية تم تفعيلها -->
+    <div id="nav-home" class="flex flex-col items-center text-blue-600 cursor-pointer" onclick="UI.navigateToHome()">
       <i class="fas fa-home text-xl"></i>
       <span class="text-[10px] mt-1 font-bold">الرئيسية</span>
     </div>
 
+    <!-- تابة السلة الثابتة -->
     <div class="flex flex-col items-center text-gray-400 relative" onclick="UI.openCheckout()">
       <div class="bg-blue-600 w-14 h-14 rounded-full flex items-center justify-center text-white absolute -top-10 shadow-xl border-4 border-white cursor-pointer active:scale-95 transition-transform">
         <i class="fas fa-shopping-cart"></i>
@@ -205,9 +276,10 @@
       <span id="cart-total-nav" class="text-[10px] mt-5 font-bold text-blue-600">0 ج.م</span>
     </div>
 
-    <div class="flex flex-col items-center text-gray-400">
-      <i class="fas fa-user text-xl"></i>
-      <span class="text-[10px] mt-1">حسابي</span>
+    <!-- تم تغيير التابة هنا إلى تواصل معنا -->
+    <div id="nav-contact" class="flex flex-col items-center text-gray-400 cursor-pointer" onclick="UI.navigateToContact()">
+      <i class="fas fa-headset text-xl"></i>
+      <span class="text-[10px] mt-1 font-bold">تواصل معنا</span>
     </div>
   </nav>
 
