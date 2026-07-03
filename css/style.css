@@ -1,11 +1,8 @@
 /* ============================================================
-   style.css — المحدث لحل مشكلة تداخل الـ Header
+   style.css
    ============================================================ */
 
-/* ── منع الـ Layout Shift ── */
-#products-list { min-height: 400px; }
-nav.fixed { will-change: transform; }
-
+/* ✅ @import لازم يكون أول سطر في الملف */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
 
 /* ── متغيرات الألوان ── */
@@ -32,6 +29,27 @@ body {
   min-height: 100vh;
 }
 
+/* ── منع CLS: حجز مساحة ثابتة للعناصر الديناميكية ── */
+#products-list {
+  min-height: 400px;
+  /* ✅ contain: layout يمنع أي تأثير خارجي على باقي الصفحة */
+  contain: layout;
+}
+
+/* ✅ حجز ارتفاع الـ main علشان المحتوى الديناميكي ميحرّكش الصفحة */
+main {
+  min-height: 100vh;
+  contain: layout;
+}
+
+/* ✅ swiper ارتفاع ثابت من البداية لمنع CLS */
+.swiper.mySwiper {
+  min-height: 160px;
+  height: 160px;
+}
+
+nav.fixed { will-change: transform; }
+
 /* ── Gradient رئيسي (للأزرار) ── */
 .pharmacy-gradient {
   background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
@@ -39,10 +57,10 @@ body {
 }
 
 /* ── Header ── */
+/* ✅ إزالة height: 200px اللي كانت بتتعارض مع .pharmacy-header في index.html */
 header {
   position: relative;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  height: 200px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -151,7 +169,6 @@ header .relative.z-10 {
   to   { transform: translateY(0);    opacity: 1; }
 }
 
-/* ── إصلاح زرار الإرسال في مودال السلة ── */
 .modal-sheet .p-5 {
   padding-bottom: 48px !important;
 }
@@ -199,4 +216,11 @@ header .relative.z-10 {
 @keyframes pulse-wa {
   0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
   50%       { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+}
+
+/* ✅ إصلاح Color Contrast على زرار PWA install
+   #0284c7 على أبيض نسبته 4.09 (أقل من 4.5 المطلوب)
+   #025a8e نسبته 5.2 ✅ */
+#pwa-install-btn {
+  color: #025a8e !important;
 }
