@@ -319,7 +319,7 @@
           </div>
         </div>
 
-        <!-- 💳 قسم اختيار طريقة الدفع المطور -->
+               <!-- 💳 قسم اختيار طريقة الدفع المطور -->
         <div class="space-y-3 pt-2">
           <h4 class="font-bold text-gray-700 text-sm flex items-center gap-2">
             <i class="fas fa-credit-card text-blue-600 text-xs"></i> اختر طريقة الدفع
@@ -329,7 +329,7 @@
             <!-- الدفع نقداً -->
             <label class="flex items-center justify-between p-3.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-98">
               <div class="flex items-center gap-3">
-                <input type="radio" name="payment-method" value="cash" checked class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                <input type="radio" name="payment-method" value="cash" checked onchange="UI.handlePaymentMethodChange()" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
                 <div class="flex flex-col">
                   <span class="text-sm font-bold text-gray-800">كاش (عند الاستلام)</span>
                   <span class="text-[11px] text-gray-400">الدفع نقداً للمندوب فور وصول الطلب</span>
@@ -342,7 +342,7 @@
             <label class="flex flex-col p-3.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-98">
               <div class="flex items-center justify-between w-full">
                 <div class="flex items-center gap-3">
-                  <input type="radio" name="payment-method" value="wallet" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                  <input type="radio" name="payment-method" value="wallet" onchange="UI.handlePaymentMethodChange()" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
                   <div class="flex flex-col">
                     <span class="text-sm font-bold text-gray-800">محفظة إلكترونية (فودافون كاش وغيرها)</span>
                     <span class="text-[11px] text-gray-400">تحويل للمحفظة مباشرة</span>
@@ -365,13 +365,14 @@
             <label class="flex flex-col p-3.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-98">
               <div class="flex items-center justify-between w-full">
                 <div class="flex items-center gap-3">
-                  <input type="radio" name="payment-method" value="instapay" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                  <input type="radio" name="payment-method" value="instapay" onchange="UI.handlePaymentMethodChange()" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
                   <div class="flex flex-col">
                     <span class="text-sm font-bold text-gray-800">تطبيق InstaPay</span>
                     <span class="text-[11px] text-gray-400">تحويل بنكي لحظي آمن</span>
                   </div>
                 </div>
-                <img src="images/instapay.png" class="h-5 w-auto object-contain" alt="InstaPay" onerror="this.outerHTML='<i class=\"fas fa-university text-lg text-teal-600\"></i>'">
+                <!-- تم استبدال الصورة بأيقونة بنك كلاسيكية متوافقة مع التصميم لتجنب الأخطاء المطبعية -->
+                <i class="fas fa-university text-lg text-teal-600"></i>
               </div>
               <!-- صندوق تفاصيل إنستا باي المخفي افتراضياً -->
               <div id="instapay-details" class="hidden mt-3 pt-3 border-t border-gray-200/60 bg-white p-3 rounded-xl border border-dashed border-teal-200 text-center animate-fade-in">
