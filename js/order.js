@@ -1,5 +1,5 @@
 // ============================================================
-//  order.js — إرسال الطلب للـ Sheet والواتساب
+//  order.js — إرسال الطلب للـ Sheet والواتساب (يدعم طرق الدفع)
 // ============================================================
 
 const Order = {
@@ -51,6 +51,9 @@ const Order = {
     localStorage.setItem(CONFIG.STORAGE_KEYS.PHONE,   phone);
     localStorage.setItem(CONFIG.STORAGE_KEYS.ADDRESS, address);
 
+    // التقاط طريقة الدفع المحددة من الواجهة
+    const paymentMethodText = Cart.getSelectedPaymentMethodText();
+
     const now     = new Date();
     const orderID = now.getTime().toString().slice(-6);
     const total   = Cart.getTotal();
@@ -66,6 +69,7 @@ const Order = {
       Status:            "قيد الانتظار",
       Date:              now.toLocaleString("ar-EG"),
       Address:           address + (this.userLocation ? `\n📍 ${this.userLocation}` : ""),
+      PaymentMethod:     paymentMethodText, // 💳 إرسال طريقة الدفع كعمود مستقل لجوجل شيت
     };
 
     const btn = document.getElementById("sendBtn");
@@ -73,7 +77,7 @@ const Order = {
 
     try {
       await API.submitOrder(orderData);
-      this._openWhatsApp(name, phone, address, orderID, details, total, discountCode);
+      this._openWhatsApp(name, phone, address, orderID, details, total, discountCode, paymentMethodText);
       Cart.clear();
       UI.closeCheckout();
       this.userLocation = "";
@@ -138,6 +142,7 @@ const Order = {
       Status:            "قيد الانتظار",
       Date:              now.toLocaleString("ar-EG"),
       Address:           "",
+      PaymentMethod:     "غير محدد (طلب روشتة)",
     };
 
     const btn = document.getElementById("presc-send-btn");
@@ -171,8 +176,8 @@ const Order = {
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, "_blank");
   },
 
-  // 📲 فتح واتساب للطلب العادي
-  _openWhatsApp(name, phone, address, orderID, details, total, discountCode) {
+  // 📲 فتح واتساب للطلب العادي (مضاف إليه طريقة الدفع)
+  _openWhatsApp(name, phone, address, orderID, details, total, discountCode, paymentMethodText) {
     const waNumber = window.APP_SETTINGS?.WhatsAppNumber || "";
     let msg = `*🏥 طلب جديد — ${CONFIG.PHARMACY_NAME}*\n`;
     msg += `*رقم الفاتورة:* #${orderID}\n`;
@@ -182,8 +187,10 @@ const Order = {
     msg += `*📍 العنوان:* ${address}\n`;
     if (this.userLocation) msg += `🗺️ *الموقع:* ${this.userLocation}\n`;
     msg += `━━━━━━━━━━━━━━━━━━\n`;
-    msg += `*🛒 الأصناف:*\n${details}\n`;
+    msg += `*🛒 الأصناف:*\n${details}\n`; // تفاصيل السلة تحتوي أيضاً على طريقة الدفع بالداخل
     if (discountCode) msg += `\n🏷️ *كود الخصم:* ${discountCode}\n`;
+    msg += `━━━━━━━━━━━━━━━━━━\n`;
+    msg += `*💳 الدفع عبر:* ${paymentMethodText}\n`;
     msg += `━━━━━━━━━━━━━━━━━━\n`;
     msg += `*💰 الإجمالي: ${total} ج.م*`;
 
