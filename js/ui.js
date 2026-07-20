@@ -444,11 +444,132 @@ const UI = {
     if (firstTab) this.selectTab(firstTab, "الكل");
   },
 
-  // 🛒 فتح/إغلاق مودال الـ Checkout
+    // 🛒 فتح/إغلاق مودال الـ Checkout مع حقن واجهة الدفع المطورة ديناميكياً
   openCheckout() {
     Cart.updateUI();
+    
+    // إدخال قسم خيارات الدفع بشكل أنيق داخل المودال إذا لم يكن موجوداً مسبقاً
+    const parentForm = document.getElementById("cust-name")?.closest("form") || document.getElementById("checkoutModal")?.querySelector(".p-6");
+    
+    if (parentForm && !document.getElementById("payment-methods-section")) {
+      const paymentHTML = `
+        <div id="payment-methods-section" class="mt-5 border-t border-gray-100 pt-4 text-right">
+          <label class="block text-sm font-black text-gray-700 mb-3">💵 طريقة الدفع المفضلة:</label>
+          
+          <div class="space-y-2">
+            <!-- خيار الكاش -->
+            <label class="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-[0.98]" id="label-pay-cash">
+              <input type="radio" name="paymentMethod" value="cash" checked onchange="UI.handlePaymentMethodChange(this)" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+              <div class="flex items-center gap-2">
+                <span class="text-base">💵</span>
+                <span class="text-sm font-bold text-gray-700">نقدي عند الاستلام</span>
+              </div>
+            </label>
+
+            <!-- خيار فودافون كاش -->
+            <label class="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-[0.98]" id="label-pay-wallet">
+              <input type="radio" name="paymentMethod" value="wallet" onchange="UI.handlePaymentMethodChange(this)" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+              <div class="flex items-center gap-2">
+                <span class="text-base">📱</span>
+                <span class="text-sm font-bold text-gray-700">${CONFIG.PAYMENT_METHODS.VODAFONE.label}</span>
+              </div>
+            </label>
+
+            <!-- خيار إنستا باي -->
+            <label class="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-[0.98]" id="label-pay-instapay">
+              <input type="radio" name="paymentMethod" value="instapay" onchange="UI.handlePaymentMethodChange(this)" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+              <div class="flex items-center gap-2">
+                <span class="text-base">⚡</span>
+                <span class="text-sm font-bold text-gray-700">${CONFIG.PAYMENT_METHODS.INSTAPAY.label}</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- صندوق تفاصيل الدفع الرقمي الديناميكي -->
+          <div id="payment-details-box" class="hidden mt-3 p-3 bg-blue-50/70 border border-blue-100 rounded-xl transition-all">
+            <p id="payment-instruction-text" class="text-xs text-blue-900 font-medium leading-relaxed"></p>
+            <div class="flex items-center justify-between bg-white border border-blue-200 rounded-lg p-2 mt-2 gap-2">
+              <span id="payment-target-number" class="text-base font-black text-blue-700 font-mono tracking-wider"></span>
+              <button type="button" onclick="UI.copyPaymentNumber()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1.5 px-3 rounded-md shadow-sm transition-all active:scale-95 flex items-center gap-1">
+                <span id="copy-btn-text">نسخ الرقم</span>
+                <i class="far fa-copy"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // نضع الخيارات فوق زر الإرسال النهائي مباشرة
+      const submitBtn = parentForm.querySelector("button[type='submit']") || parentForm.lastElementChild;
+      if (submitBtn) {
+        submitBtn.insertAdjacentHTML('beforebegin', paymentHTML);
+      } else {
+        parentForm.insertAdjacentHTML('beforeend', paymentHTML);
+      }
+    } else if (document.getElementById("payment-methods-section")) {
+      // إعادة ضبط الاختيار الافتراضي عند فتح المودال مجدداً
+      const defaultRadio = document.querySelector('input[name="paymentMethod"][value="cash"]');
+      if (defaultRadio) {
+        defaultRadio.checked = true;
+        this.handlePaymentMethodChange(defaultRadio);
+      }
+    }
+
     document.getElementById("checkoutModal")?.classList.add("active");
     document.body.style.overflow = "hidden";
+  },
+
+  // التحكم في ستايل الاختيارات وعرض صندوق الأرقام ديناميكياً
+  handlePaymentMethodChange(radio) {
+    const box = document.getElementById("payment-details-box");
+    const instructionText = document.getElementById("payment-instruction-text");
+    const targetNumber = document.getElementById("payment-target-number");
+    
+    // إعادة تعيين ألوان الخلفيات للبطاقات للوضع غير النشط
+    document.querySelectorAll('input[name="paymentMethod"]').forEach(input => {
+      const parentLabel = input.closest('label');
+      if (parentLabel) {
+        parentLabel.className = "flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-[0.98]";
+      }
+    });
+
+    // تمييز البطاقة النشطة حالياً خلفية رمادية خفيفة
+    if (radio.checked) {
+      radio.closest('label').className = "flex items-center gap-3 p-3 bg-gray-50 border border-blue-500/30 rounded-xl cursor-pointer transition-all active:scale-[0.98] ring-1 ring-blue-500/20";
+    }
+
+    // إظهار أو إخفاء صندوق التحويل الرقمي بناءً على نوع الدفع
+    if (radio.value === "cash") {
+      box?.classList.add("hidden");
+    } else if (radio.value === "wallet") {
+      box?.classList.remove("hidden");
+      if (instructionText) instructionText.textContent = CONFIG.PAYMENT_METHODS.VODAFONE.instruction;
+      if (targetNumber) targetNumber.textContent = CONFIG.PAYMENT_METHODS.VODAFONE.number;
+    } else if (radio.value === "instapay") {
+      box?.classList.remove("hidden");
+      if (instructionText) instructionText.textContent = CONFIG.PAYMENT_METHODS.INSTAPAY.instruction;
+      if (targetNumber) targetNumber.textContent = CONFIG.PAYMENT_METHODS.INSTAPAY.number;
+    }
+    
+    // إعادة تعيين نص زر النسخ
+    const btnText = document.getElementById("copy-btn-text");
+    if (btnText) btnText.textContent = "نسخ الرقم";
+  },
+
+  // وظيفة النسخ الذكي والسرع بنقرة واحدة
+  copyPaymentNumber() {
+    const numberText = document.getElementById("payment-target-number")?.textContent;
+    const btnText = document.getElementById("copy-btn-text");
+    if (!numberText) return;
+
+    navigator.clipboard.writeText(numberText).then(() => {
+      if (btnText) {
+        btnText.textContent = "تم النسخ! ✓";
+        setTimeout(() => { btnText.textContent = "نسخ الرقم"; }, 2500);
+      }
+    }).catch(err => {
+      console.error("فشل النسخ تلقائياً: ", err);
+    });
   },
 
   closeCheckout() {
