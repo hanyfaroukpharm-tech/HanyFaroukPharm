@@ -63,33 +63,30 @@ const Cart = {
 
   // 📝 الحصول على طريقة الدفع المحددة حالياً كنص مقروء
   getSelectedPaymentMethodText() {
-    const checkedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+    const checkedRadio = document.querySelector('input[name="payment-method"]:checked');
     if (!checkedRadio) return "نقدي عند الاستلام";
     
     const value = checkedRadio.value;
-    if (value === "wallet") return CONFIG.PAYMENT_METHODS.VODAFONE.label;
-    if (value === "instapay") return CONFIG.PAYMENT_METHODS.INSTAPAY.label;
+    if (value === "wallet") return "محفظة إلكترونية (فودافون كاش)";
+    if (value === "instapay") return "تطبيق InstaPay";
     return "نقدي عند الاستلام";
   },
 
-  // 📝 تجهيز تفاصيل الطلب بنص منظم جداً للواتساب
+  // 📝 تجهيز تفاصيل الطلب بنص منظم جداً للواتساب بدون تكرار طريقة الدفع
   getSummaryText() {
     if (this.items.length === 0) return "السلة فارغة";
 
-    let text = "📦 *طلب جديد من التطبيق* \n";
-    text += "--------------------------\n";
-
+    let text = "";
     this.items.forEach((item, i) => {
       text += `*${i + 1}-* ${item.name}\n`;
       text += `🏷️ القسم: _${item.category}_\n`;
       text += `🔢 الكمية: ${item.qty} × ${item.price} ج.م\n`;
       text += `💰 السعر: *${item.price * item.qty} ج.م*\n`;
-      text += "--------------------------\n";
+      if (i < this.items.length - 1) {
+        text += "--------------------------\n";
+      }
     });
 
-    text += `💳 *طريقة الدفع:* _${this.getSelectedPaymentMethodText()}_\n`;
-    text += "--------------------------\n";
-    text += `\n💵 *الإجمالي النهائي: ${this.getTotal()} ج.م*`;
     return text;
   },
 
