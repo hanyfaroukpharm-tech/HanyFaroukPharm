@@ -1,5 +1,5 @@
 // ============================================================
-//  cart.js — النسخة المعدلة لتنظيم رسالة الواتساب ودعم الأقسام
+//  cart.js — النسخة المعدلة لتنظيم رسالة الواتساب ودعم الأقسام وطرق الدفع
 // ============================================================
 
 const Cart = {
@@ -61,6 +61,17 @@ const Cart = {
     return this.items.reduce((sum, i) => sum + i.qty, 0);
   },
 
+  // 📝 الحصول على طريقة الدفع المحددة حالياً كنص مقروء
+  getSelectedPaymentMethodText() {
+    const checkedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+    if (!checkedRadio) return "نقدي عند الاستلام";
+    
+    const value = checkedRadio.value;
+    if (value === "wallet") return CONFIG.PAYMENT_METHODS.VODAFONE.label;
+    if (value === "instapay") return CONFIG.PAYMENT_METHODS.INSTAPAY.label;
+    return "نقدي عند الاستلام";
+  },
+
   // 📝 تجهيز تفاصيل الطلب بنص منظم جداً للواتساب
   getSummaryText() {
     if (this.items.length === 0) return "السلة فارغة";
@@ -76,6 +87,8 @@ const Cart = {
       text += "--------------------------\n";
     });
 
+    text += `💳 *طريقة الدفع:* _${this.getSelectedPaymentMethodText()}_\n`;
+    text += "--------------------------\n";
     text += `\n💵 *الإجمالي النهائي: ${this.getTotal()} ج.م*`;
     return text;
   },
