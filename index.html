@@ -314,12 +314,79 @@
               <i class="fas fa-map-marker-alt"></i> تحديد موقعي
             </button>
           </div>
-          <div id="location-status" class="hidden text-xs text-emerald-600 font-bold flex items-center gap-1">
+                    <div id="location-status" class="hidden text-xs text-emerald-600 font-bold flex items-center gap-1">
             <i class="fas fa-check-circle"></i> تم تحديد الموقع بنجاح
           </div>
         </div>
 
-        <button id="sendBtn" onclick="Order.submit()" class="w-full pharmacy-gradient text-white py-4 rounded-2xl font-bold shadow-lg text-base active:scale-95 transition-transform">
+        <!-- 💳 قسم اختيار طريقة الدفع المطور -->
+        <div class="space-y-3 pt-2">
+          <h4 class="font-bold text-gray-700 text-sm flex items-center gap-2">
+            <i class="fas fa-credit-card text-blue-600 text-xs"></i> اختر طريقة الدفع
+          </h4>
+          
+          <div class="grid grid-cols-1 gap-2">
+            <!-- الدفع نقداً -->
+            <label class="flex items-center justify-between p-3.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-98">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="cash" checked class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold text-gray-800">كاش (عند الاستلام)</span>
+                  <span class="text-[11px] text-gray-400">الدفع نقداً للمندوب فور وصول الطلب</span>
+                </div>
+              </div>
+              <i class="fas fa-money-bill-wave text-lg text-emerald-500"></i>
+            </label>
+
+            <!-- فودافون كاش / المحافظ الإلكترونية -->
+            <label class="flex flex-col p-3.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-98">
+              <div class="flex items-center justify-between w-full">
+                <div class="flex items-center gap-3">
+                  <input type="radio" name="payment-method" value="wallet" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                  <div class="flex flex-col">
+                    <span class="text-sm font-bold text-gray-800">محفظة إلكترونية (فودافون كاش وغيرها)</span>
+                    <span class="text-[11px] text-gray-400">تحويل للمحفظة مباشرة</span>
+                  </div>
+                </div>
+                <i class="fas fa-mobile-alt text-xl text-red-500"></i>
+              </div>
+              <!-- صندوق تفاصيل المحفظة المخفي افتراضياً -->
+              <div id="wallet-details" class="hidden mt-3 pt-3 border-t border-gray-200/60 bg-white p-3 rounded-xl border border-dashed border-red-200 text-center animate-fade-in">
+                <p class="text-xs text-gray-500 mb-1">يرجى تحويل الإجمالي إلى الرقم التالي:</p>
+                <div class="flex items-center justify-center gap-2 bg-red-50 p-2 rounded-lg my-1.5 border border-red-100">
+                  <span id="wallet-num-display" class="font-black text-red-600 text-base tracking-wide">010XXXXXXXX</span>
+                  <button type="button" onclick="UI.copyPaymentNumber('wallet')" class="text-xs bg-red-600 text-white px-2 py-1 rounded-md font-bold active:scale-90 transition-transform">نسخ</button>
+                </div>
+                <p class="text-[10px] text-amber-600 font-bold">⚠️ يرجى إرفاق صورة لقطة الشاشة (الاسكرين) للتحويل في الواتساب</p>
+              </div>
+            </label>
+
+            <!-- إنستا باي -->
+            <label class="flex flex-col p-3.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer transition-all active:scale-98">
+              <div class="flex items-center justify-between w-full">
+                <div class="flex items-center gap-3">
+                  <input type="radio" name="payment-method" value="instapay" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                  <div class="flex flex-col">
+                    <span class="text-sm font-bold text-gray-800">تطبيق InstaPay</span>
+                    <span class="text-[11px] text-gray-400">تحويل بنكي لحظي آمن</span>
+                  </div>
+                </div>
+                <img src="images/instapay.png" class="h-5 w-auto object-contain" alt="InstaPay" onerror="this.outerHTML='<i class=\"fas fa-university text-lg text-teal-600\"></i>'">
+              </div>
+              <!-- صندوق تفاصيل إنستا باي المخفي افتراضياً -->
+              <div id="instapay-details" class="hidden mt-3 pt-3 border-t border-gray-200/60 bg-white p-3 rounded-xl border border-dashed border-teal-200 text-center animate-fade-in">
+                <p class="text-xs text-gray-500 mb-1">يرجى التحويل إلى عنوان الدفع (IPA) التالي:</p>
+                <div class="flex items-center justify-center gap-2 bg-teal-50 p-2 rounded-lg my-1.5 border border-teal-100">
+                  <span id="instapay-address-display" class="font-black text-teal-700 text-sm">name@instapay</span>
+                  <button type="button" onclick="UI.copyPaymentNumber('instapay')" class="text-xs bg-teal-600 text-white px-2 py-1 rounded-md font-bold active:scale-90 transition-transform">نسخ</button>
+                </div>
+                <p class="text-[10px] text-amber-600 font-bold">⚠️ يرجى إرفاق صورة لقطة الشاشة (الاسكرين) للتحويل في الواتساب</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <button id="sendBtn" onclick="Order.submit()" class="w-full pharmacy-gradient text-white py-4 rounded-2xl font-bold shadow-lg text-base active:scale-95 transition-transform mt-2">
           <i class="fab fa-whatsapp ml-2"></i> تأكيد وإرسال الطلب
         </button>
       </div>
