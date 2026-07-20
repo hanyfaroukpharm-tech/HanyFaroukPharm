@@ -51,8 +51,15 @@ const Order = {
     localStorage.setItem(CONFIG.STORAGE_KEYS.PHONE,   phone);
     localStorage.setItem(CONFIG.STORAGE_KEYS.ADDRESS, address);
 
-    // التقاط طريقة الدفع المحددة من الواجهة
-    const paymentMethodText = Cart.getSelectedPaymentMethodText();
+    // 💳 التقاط طريقة الدفع المحددة من الواجهة مباشرة وترجمتها للشيت والواتساب
+    const selectedPaymentValue = document.querySelector('input[name="payment-method"]:checked')?.value || "cash";
+    let paymentMethodText = "نقدي عند الاستلام";
+    
+    if (selectedPaymentValue === "wallet") {
+      paymentMethodText = "محفظة إلكترونية (فودافون كاش)";
+    } else if (selectedPaymentValue === "instapay") {
+      paymentMethodText = "تطبيق InstaPay";
+    }
 
     const now     = new Date();
     const orderID = now.getTime().toString().slice(-6);
@@ -138,7 +145,7 @@ const Order = {
       Phone:             phone,
       OrderDetails:      notes ? `ملاحظات: ${notes}` : "طلب روشتة طبية",
       PrescriptionImage: "سيتم إرسال الصورة عبر واتساب",
-      Total:             0,
+      Total: 0,
       Status:            "قيد الانتظار",
       Date:              now.toLocaleString("ar-EG"),
       Address:           "",
@@ -187,7 +194,7 @@ const Order = {
     msg += `*📍 العنوان:* ${address}\n`;
     if (this.userLocation) msg += `🗺️ *الموقع:* ${this.userLocation}\n`;
     msg += `━━━━━━━━━━━━━━━━━━\n`;
-    msg += `*🛒 الأصناف:*\n${details}\n`; // تفاصيل السلة تحتوي أيضاً على طريقة الدفع بالداخل
+    msg += `*🛒 الأصناف:*\n${details}\n`; 
     if (discountCode) msg += `\n🏷️ *كود الخصم:* ${discountCode}\n`;
     msg += `━━━━━━━━━━━━━━━━━━\n`;
     msg += `*💳 الدفع عبر:* ${paymentMethodText}\n`;
